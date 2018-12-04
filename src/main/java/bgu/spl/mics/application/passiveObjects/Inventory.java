@@ -1,6 +1,6 @@
 package bgu.spl.mics.application.passiveObjects;
 
-import bgu.spl.mics.AtomicLinkedList;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Passive data-object representing the store inventory.
@@ -17,10 +17,10 @@ public class Inventory {
 		private static Inventory instance= new Inventory();
 	}
 	
-	private AtomicLinkedList<BookInventoryInfo> inventoryList;//TODO check if AtomicList is implemented
+	private ConcurrentLinkedQueue<BookInventoryInfo> inventoryList;//TODO check if AtomicList is implemented
 
 	private Inventory() {
-		this.inventoryList= new AtomicLinkedList<BookInventoryInfo>();
+		this.inventoryList= new ConcurrentLinkedQueue<BookInventoryInfo>();
 	}
 	
 	

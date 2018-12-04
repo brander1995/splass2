@@ -11,12 +11,17 @@ public class MessageBusImpl implements MessageBus {
 		private static MessageBus instance= new MessageBusImpl();
 	}
 	
+	
+	
+	private Hashtable<EventType ,MicroServiceList<EventType> > bus;
+	
 	private  MessageBusImpl() {
-		// TODO Auto-generated constructor stub
+		bus= new Hashtable<>();
+	
 	}
 	
 	
-	//TODO rachel: ??????
+	
 	public static MessageBus getInstance()
 	{
 		return MessageBusHolder.instance;

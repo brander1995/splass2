@@ -48,8 +48,9 @@ public class BookInventoryInfo {
      */
 	public int getAmountInInventory() {
 		
-		//TODO this field can change during this method? 
-		return this.amountInInventory;
+		synchronized (this.lockAmountInInventory) {
+			return this.amountInInventory;
+		}
 	}
 
 	/**
