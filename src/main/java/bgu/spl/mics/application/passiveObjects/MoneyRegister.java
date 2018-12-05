@@ -1,5 +1,5 @@
 package bgu.spl.mics.application.passiveObjects;
-
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 /**
@@ -16,10 +16,12 @@ public class MoneyRegister {
 		private static MoneyRegister instance = new MoneyRegister();
 	}
 	
+	private ConcurrentLinkedQueue<OrderReceipt> register;
+	
 	
 	private MoneyRegister() 
 	{
-		//TODO Implement this 
+		register = new ConcurrentLinkedQueue<>(); 
 	}
 	
 	
@@ -38,15 +40,24 @@ public class MoneyRegister {
      * @param r		The receipt to save in the money register.
      */
 	public void file (OrderReceipt r) {
-		//TODO: Implement this.
-	}
+		register.add(r);
+		}
 	
 	/**
      * Retrieves the current total earnings of the store.  
      */
+	
+	
+	//TODO : synchronized this? the Queue alone is fine?
 	public int getTotalEarnings() {
-		//TODO: Implement this
-		return 0;
+		
+		int totalEarning=0;
+		for (OrderReceipt receipt: this.register)
+		{
+			totalEarning = totalEarning + receipt.getPrice();
+		}
+		
+		return totalEarning;
 	}
 	
 	/**
@@ -54,8 +65,12 @@ public class MoneyRegister {
      * <p>
      * @param amount 	amount to charge
      */
+	
+	
 	public void chargeCreditCard(Customer c, int amount) {
-		// TODO Implement this
+		
+		c.ChargeCustomer(amount);
+		
 	}
 	
 	/**

@@ -82,5 +82,9 @@ public class Customer {
 	public int getCreditNumber() {
 		return this.creditNumber;
 	}
-	
+
+	public void ChargeCustomer(int amount)
+	{
+		//TODO Implement this
+	}
 }
