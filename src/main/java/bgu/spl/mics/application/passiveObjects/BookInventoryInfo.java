@@ -72,11 +72,20 @@ public class BookInventoryInfo {
 		}
 	}
 	
-	public void decreaseAmountInInventory()
+	
+	//decreases the AmountInInventory if possible. return true is succeeded and false otherwise.
+
+	public boolean decreaseAmountInInventory()
 	{
 		synchronized (this.lockAmountInInventory) 
 		{
-			this.amountInInventory++;
+			if (this.amountInInventory>0)
+			{
+				this.amountInInventory--;
+				return true;
+			}
+			return false;
+				
 		}
 	}
 

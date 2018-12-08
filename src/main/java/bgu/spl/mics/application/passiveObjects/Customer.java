@@ -15,15 +15,16 @@ public class Customer {
 	private String name;
 	private int id;
 	private String address;
-	private int creditNumber;
+	private CreditCard card;
+
 	
 	
-	public Customer(String Name, int Id, String Address, int CreditNumber)
+	public Customer(String Name, int Id, String Address, int CreditNumber, int money)
 	{
 		this.name=Name;
 		this.id=Id;
 		this.address=Address;
-		this.creditNumber=CreditNumber;
+		this.card=new CreditCard(CreditNumber, money);
 	}
 	
 	/**
@@ -72,19 +73,18 @@ public class Customer {
      * @return Amount of money left.   
      */
 	public int getAvailableCreditAmount() {
-		// TODO Implement this
-		return 0;
+		return this.card.getMoney();
 	}
 	
 	/**
      * Retrieves this customers credit card serial number.    
      */
 	public int getCreditNumber() {
-		return this.creditNumber;
+		return this.card.getCreditNumber();
 	}
 
 	public void ChargeCustomer(int amount)
 	{
-		//TODO Implement this
+		this.card.ChargeCred(amount);
 	}
 }

@@ -57,9 +57,26 @@ public class Inventory {
      * 			The first should not change the state of the inventory while the 
      * 			second should reduce by one the number of books of the desired type.
      */
+	
+	
+	
 	public OrderResult take (String book) {
 		
-		return null;
+		boolean taken=false;
+		for (BookInventoryInfo Book:inventoryList)
+		{
+			if (Book.getBookTitle().equals(book))
+			{
+				//decreaseAmountInInvemtory is thread safe
+				taken=Book.decreaseAmountInInventory();
+
+			}
+			
+		}
+		if (taken)
+			return OrderResult.SUCCESSFULLY_TAKEN;
+		else
+			return OrderResult.NOT_IN_STOCK;
 	}
 	
 	
@@ -71,7 +88,13 @@ public class Inventory {
      * @return the price of the book if it is available, -1 otherwise.
      */
 	public int checkAvailabiltyAndGetPrice(String book) {
-		//TODO: Implement this
+		
+		for (BookInventoryInfo Book:inventoryList)
+		{
+			if (Book.getBookTitle().equals(book)&&Book.getAmountInInventory()>0)
+				return Book.getPrice();//TODO : is this safe? getPrice is not synchronized.
+				
+		}
 		return -1;
 	}
 	

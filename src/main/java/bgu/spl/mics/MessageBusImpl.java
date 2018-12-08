@@ -13,7 +13,7 @@ public class MessageBusImpl implements MessageBus {
 	
 	
 	
-	private Hashtable<EventType ,MicroServiceList<EventType> > bus;
+	private Hashtable<EventType,MicroServiceList<EventType> > bus;
 	
 	private  MessageBusImpl() {
 		bus= new Hashtable<>();
