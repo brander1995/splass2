@@ -1,5 +1,8 @@
 package bgu.spl.mics;
 import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import javax.swing.plaf.basic.BasicScrollPaneUI.HSBChangeListener;
 
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
@@ -13,10 +16,14 @@ public class MessageBusImpl implements MessageBus {
 	
 	
 	
-	private Hashtable<EventType,MicroServiceList<EventType> > bus;
+	private Hashtable<String,MicroServiceList> EventBus;
+	private Hashtable<String, MicroServiceList> BroadcastBus;
+	private Hashtable<Class<?>, ConcurrentLinkedQueue<Message>> MessageQueueContainer;
+	
 	
 	private  MessageBusImpl() {
-		bus= new Hashtable<>();
+		EventBus= new Hashtable<>();
+		BroadcastBus= new Hashtable<>();
 	
 	}
 	
@@ -30,13 +37,13 @@ public class MessageBusImpl implements MessageBus {
 	
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
-		// TODO Auto-generated method stub
+		EventBus.get(type.getTypeName()).getMicroServices().add(m);
 		
 	}
 
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
-		// TODO Auto-generated method stub
+		BroadcastBus.get(type.getTypeName()).getMicroServices().add(m);
 
 	}
 
@@ -61,7 +68,8 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public void register(MicroService m) {
-		// TODO Auto-generated method stub
+		ConcurrentLinkedQueue<Message> Messages=  new ConcurrentLinkedQueue<>(); 
+		MessageQueueContainer.put(m.getClass(), Messages);
 
 	}
 

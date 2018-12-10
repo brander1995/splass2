@@ -92,7 +92,7 @@ public class Inventory {
 		for (BookInventoryInfo Book:inventoryList)
 		{
 			if (Book.getBookTitle().equals(book)&&Book.getAmountInInventory()>0)
-				return Book.getPrice();//TODO : is this safe? getPrice is not synchronized.
+				return Book.getPrice();//TODO :  safe? getPrice is not synchronized.
 				
 		}
 		return -1;

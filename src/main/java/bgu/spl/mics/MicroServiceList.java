@@ -3,18 +3,17 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
-public class MicroServiceList<T> {
+public class MicroServiceList {
 	
 	
 	
 	private ConcurrentLinkedQueue<MicroService> microservices;
-	private ConcurrentLinkedQueue<Event<T>> events;
 	
 	
 	public MicroServiceList()
 	{
 		microservices=new ConcurrentLinkedQueue<>();
-		events= new ConcurrentLinkedQueue<>();
+	
 	}
 	
 	
@@ -26,10 +25,7 @@ public class MicroServiceList<T> {
 	
 	
 	
-	public ConcurrentLinkedQueue<Event<T>> getEvents()
-	{
-		return this.events;
-	}
+
 	
 	
 	
