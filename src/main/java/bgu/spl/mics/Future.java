@@ -1,6 +1,8 @@
 package bgu.spl.mics;
 
 
+import java.time.LocalTime;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 
@@ -100,18 +102,22 @@ public class Future<T> {
 		
 		if (this.isDone())
 			return result;
+		
 		else
 		{
-			
-			try {
-				
-				unit.sleep(timeout);
+			for (int i = 0;
+				 (i < 5) && (!this.isDone());
+				 i++)
+			{
+				try {
+					unit.sleep(timeout/5);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if (this.isDone())
+					return result;
 			}
-				catch (InterruptedException e) {}
-			
-			
-		if (this.isDone())
-			return result;
 		}
 		return null;
 	}

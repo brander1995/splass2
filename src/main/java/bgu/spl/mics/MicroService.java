@@ -23,8 +23,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public abstract class MicroService implements Runnable {
 
     private boolean terminated = false;
-    private final String name;    
+    private final String name; 
+    private MessageBus messageBus;
     
+    // The callbacks for the current microservice, linked to the types available
+    private ConcurrentLinkedQueue<CallbackHandler<Object>> eventCallbackQueue;
+    private ConcurrentLinkedQueue<CallbackHandler<Object>> broadcastCallbackQueue;
 
     /**
      * @param name the micro-service name (used mainly for debugging purposes -
@@ -32,6 +36,9 @@ public abstract class MicroService implements Runnable {
      */
     public MicroService(String name) {
         this.name = name;
+        this.eventCallbackQueue = new ConcurrentLinkedQueue<>();
+        this.broadcastCallbackQueue = new ConcurrentLinkedQueue<>();
+        this.messageBus=MessageBusImpl.getInstance();
     }
 
     /**
@@ -56,7 +63,9 @@ public abstract class MicroService implements Runnable {
      *                 queue.
      */
     protected final <T, E extends Event<T>> void subscribeEvent(Class<E> type, Callback<E> callback) {
-        //TODO: implement this.
+        messageBus.subscribeEvent(type, this);
+    	CallbackHandler<E> currCallback = new CallbackHandler<>(callback, type);
+        this.eventCallbackQueue.add((CallbackHandler<Object>) currCallback);
     }
 
     /**
@@ -79,8 +88,11 @@ public abstract class MicroService implements Runnable {
      *                 {@code type} are taken from this micro-service message
      *                 queue.
      */
-    protected final <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback) {
-        //TODO: implement this.
+    @SuppressWarnings("unchecked")
+	protected final <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback) {
+    	 messageBus.subscribeBroadcast(type, this);
+     	CallbackHandler<B> currCallback = new CallbackHandler<>(callback, type);
+         this.broadcastCallbackQueue.add((CallbackHandler<Object>) currCallback);
     }
 
     /**
@@ -96,8 +108,7 @@ public abstract class MicroService implements Runnable {
      * 	       			null in case no micro-service has subscribed to {@code e.getClass()}.
      */
     protected final <T> Future<T> sendEvent(Event<T> e) {
-        //TODO: implement this.
-        return null; //TODO: delete this line :)
+    	return this.messageBus.sendEvent(e);
     }
 
     /**
@@ -107,8 +118,8 @@ public abstract class MicroService implements Runnable {
      * @param b The broadcast message to send
      */
     protected final void sendBroadcast(Broadcast b) {
-        //TODO: implement this.
-    }
+        this.messageBus.sendBroadcast(b);
+        }
 
     /**
      * Completes the received request {@code e} with the result {@code result}
@@ -121,7 +132,7 @@ public abstract class MicroService implements Runnable {
      *               {@code e}.
      */
     protected final <T> void complete(Event<T> e, T result) {
-        //TODO: implement this.
+    	messageBus.complete(e, result);
     }
 
     /**
@@ -152,10 +163,31 @@ public abstract class MicroService implements Runnable {
     @Override
     public final void run() {
         initialize();
+        
+        // Receives the message from the message bus
+        // Handles the message if one exists,
+        // other wise just sit and wait for one.
         while (!terminated) {
-            System.out.println("NOT IMPLEMENTED!!!"); //TODO: you should delete this line :)
+        	try {
+				Message msg = this.messageBus.awaitMessage(this);
+				if (msg instanceof Broadcast)
+				{
+					for (CallbackHandler<Object> callbackHandler : broadcastCallbackQueue) {
+						callbackHandler.getCallbackRegardless().call(msg);
+					}
+				}
+				else 
+				{
+					//TODO implement this
+						
+				}
+				
+				
+			} catch (InterruptedException e) {
+				// TODO Remove me!
+				System.out.println("this is done by us, remove me!");
+				e.printStackTrace();
+			}       
         }
     }
-  
-
 }
