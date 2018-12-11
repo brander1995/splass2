@@ -1,5 +1,7 @@
 package bgu.spl.mics.application.passiveObjects;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import bgu.spl.mics.Future;
 
 /**
@@ -16,11 +18,15 @@ public class ResourcesHolder {
 		private static ResourcesHolder instance= new ResourcesHolder();
 	}
 	
+	private ConcurrentLinkedQueue<DeliveryVehicle> vehiclesList;
+	
 	
 	private ResourcesHolder()
 	{
-		//TODO implement this
+		this.vehiclesList= new ConcurrentLinkedQueue<>();
 	}
+	
+	
 	/**
      * Retrieves the single instance of this class.
      */
@@ -57,8 +63,16 @@ public class ResourcesHolder {
      * <p>
      * @param vehicles	Array of {@link DeliveryVehicle} instances to store.
      */
+	
+	
+	//TODO: should i synch this?
 	public void load(DeliveryVehicle[] vehicles) {
-		//TODO: Implement this
+		
+		
+		for (DeliveryVehicle vehicle: vehicles)
+		{
+			this.vehiclesList.add(vehicle);
+		}
 	}
 
 }

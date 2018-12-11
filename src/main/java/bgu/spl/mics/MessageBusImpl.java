@@ -19,11 +19,15 @@ public class MessageBusImpl implements MessageBus {
 	private Hashtable<String,MicroServiceList> EventBus;
 	private Hashtable<String, MicroServiceList> BroadcastBus;
 	private Hashtable<Class<?>, ConcurrentLinkedQueue<Message>> MessageQueueContainer;
+	private ConcurrentLinkedQueue<EventToFuture> eventAndFuture;
+	
 	
 	
 	private  MessageBusImpl() {
 		EventBus= new Hashtable<>();
 		BroadcastBus= new Hashtable<>();
+		MessageQueueContainer= new Hashtable<>();
+		eventAndFuture= new ConcurrentLinkedQueue<>();
 	
 	}
 	
@@ -37,24 +41,37 @@ public class MessageBusImpl implements MessageBus {
 	
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
-		EventBus.get(type.getTypeName()).getMicroServices().add(m);
+		EventBus.get(type.getClass().getName()).getMicroServices().add(m);
 		
 	}
 
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
-		BroadcastBus.get(type.getTypeName()).getMicroServices().add(m);
+		BroadcastBus.get(type.getClass().getName()).getMicroServices().add(m);
 
 	}
 
 	@Override
 	public <T> void complete(Event<T> e, T result) {
-		// TODO Auto-generated method stub
-
+		for (EventToFuture event: eventAndFuture)
+		{
+			Future<T> releventFuture =(Future<T>) event.getReleventFuture(e);
+			if (releventFuture != null)
+			{
+				releventFuture.resolve(result);
+			}
+		}
+		
 	}
 
 	@Override
 	public void sendBroadcast(Broadcast b) {
+		MicroServiceList MicroServises= BroadcastBus.get(b.getClass().getName());
+		for (MicroService micro: MicroServises.getMicroServices())
+		{
+			
+		}
+		
 		// TODO Auto-generated method stub
 
 	}
