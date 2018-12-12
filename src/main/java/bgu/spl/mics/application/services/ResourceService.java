@@ -1,6 +1,7 @@
 package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
 
 /**
  * ResourceService is in charge of the store resources - the delivery vehicles.
@@ -13,14 +14,17 @@ import bgu.spl.mics.MicroService;
  */
 public class ResourceService extends MicroService{
 
+	ResourcesHolder resource;
+	
+	
 	public ResourceService() {
-		super("Change_This_Name");
-		// TODO Implement this
+		super("Resource Service");
+		this.resource=ResourcesHolder.getInstance();
 	}
 
 	@Override
 	protected void initialize() {
-		// TODO Implement this
+		// TODO Auto-generated method stub
 		
 	}
 
