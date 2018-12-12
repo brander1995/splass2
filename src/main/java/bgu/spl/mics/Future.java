@@ -1,8 +1,6 @@
 package bgu.spl.mics;
 
 
-import java.time.LocalTime;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 
@@ -17,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class Future<T> {
 	
 	private T result;
+	
 	
 	/**
 	 * This should be the the only public constructor in this class.
@@ -100,6 +99,7 @@ public class Future<T> {
 	
 	public  T get(long timeout, TimeUnit unit) {
 		
+		
 		if (this.isDone())
 			return result;
 		
@@ -121,5 +121,6 @@ public class Future<T> {
 		}
 		return null;
 	}
+	
 
 }
