@@ -160,7 +160,8 @@ public abstract class MicroService implements Runnable {
      * The entry point of the micro-service. TODO: you must complete this code
      * otherwise you will end up in an infinite loop.
      */
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public final void run() {
         initialize();
         
@@ -178,11 +179,18 @@ public abstract class MicroService implements Runnable {
 				}
 				else 
 				{
-					//TODO implement this
-						
+					for (CallbackHandler<Object> currEv : this.eventCallbackQueue)
+					{
+						if (currEv.EventToCallback((Event<Object>)msg) != null)
+						{
+							currEv.getCallbackRegardless().call(msg);
+							break;
+						}
+					}
+					
 				}
 				
-				
+			//TODO kill
 			} catch (InterruptedException e) {
 				// TODO Remove me!
 				System.out.println("this is done by us, remove me!");

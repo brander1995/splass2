@@ -1,10 +1,14 @@
 package bgu.spl.mics.application.services;
 
-import bgu.spl.mics.BookOrderCallback;
+import bgu.spl.mics.application.CallBack.BookOrderCallback;
+import bgu.spl.mics.application.CallBack.DiscountCallBack;
 import bgu.spl.mics.application.messages.BookOrderEvent;
+import bgu.spl.mics.application.messages.CustomerOrderEvent;
+import bgu.spl.mics.application.messages.DiscountBroadcast;
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.passiveObjects.MoneyRegister;
+import bgu.spl.mics.application.passiveObjects.OrderReceipt;
 
 /**
  * Selling service in charge of taking orders from customers.
@@ -22,14 +26,18 @@ public class SellingService extends MicroService{
 	
 	
 	private BookOrderCallback<BookOrderEvent> orderCallback;
+	private DiscountCallBack<DiscountBroadcast> discount;
+	
+	private CustomerOrderEvent customerOrder;
 	
 	
 	
-	
-	public SellingService() {
+	public SellingService(CustomerOrderEvent CustomerOrder) {
 		super("Selling Service");
 		this.register=MoneyRegister.getInstance();
 		this.orderCallback= new BookOrderCallback<>();
+		this.discount= new DiscountCallBack<>();
+		this.customerOrder = CustomerOrder;
 	}
 
 	
@@ -39,9 +47,8 @@ public class SellingService extends MicroService{
 		
 		
 		MessageBusImpl.getInstance().register(this);
-//		super.subscribeEvent(BookOrderEvent.class, orderCallback);
-//		super.subscribeBroadcast(DiscountBroadcast.class, callback);
-		// TODO Auto-generated method stub
+		super.subscribeEvent(BookOrderEvent.class, this.orderCallback);
+		super.subscribeBroadcast(DiscountBroadcast.class, this.discount);
 		
 	}
 	

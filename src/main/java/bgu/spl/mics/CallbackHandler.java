@@ -16,7 +16,7 @@ public class CallbackHandler <T>{
 	
 	public Callback<T> EventToCallback(Event <T> e)
 	{
-		if (e.equals(e_type))
+		if (e.getClass().equals(e_type))
 		{
 			return this.callback;
 		}
