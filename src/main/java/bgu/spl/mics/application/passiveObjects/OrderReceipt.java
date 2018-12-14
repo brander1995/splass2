@@ -23,11 +23,11 @@ public class OrderReceipt {
 	private int proccessTick;
 	
 	
-	public OrderReceipt(BookInventoryInfo book, int customerId, int issuedT, int orderT, int ProccessT,
+	public OrderReceipt(String book, int price, int customerId, int issuedT, int orderT, int ProccessT,
 						int orderid, String Seller)
 	{
-		this.bookTitle=book.getBookTitle();
-		this.price=book.getPrice();
+		this.bookTitle=book;
+		this.price=price;
 		this.customer=customerId;
 		this.issuedTick=issuedT;
 		this.orderTick=orderT;
@@ -99,5 +99,21 @@ public class OrderReceipt {
      */
 	public int getProcessTick() {
 		return this.proccessTick;
+	}
+	
+	
+	// toString for the moneyRegister mothod:printOrderReceipts
+	public String toString()
+	{
+		String out= "order id: "+ this.ordedId+ "\n"+ 
+					"Seller: "+ this.seller+ "\n"+
+					"customer id: "+ this.customer+ "\n"+
+					"book: "+ this.bookTitle+"\n"+
+					"issued Tick: " +this.issuedTick+"\n"+
+					"order Tick: " +this.orderTick+ "\n"+
+					"proccess Tick: "+ this.orderTick;
+		return out;
+					
+					
 	}
 }

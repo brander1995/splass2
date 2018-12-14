@@ -23,46 +23,23 @@ public class APIService extends MicroService{
 
 	ConcurrentLinkedQueue<String> orderSchedule;
 	
-	public APIService(ConcurrentLinkedQueue<String> orderList) {
+	public APIService() {
 		super("API Service");
-		orderList= new ConcurrentLinkedQueue<>();
-		for (String order:orderList)
-			orderSchedule.add(order);
+		orderSchedule= new ConcurrentLinkedQueue<>();
+
 	}
 
 	@Override
 	protected void initialize() {
 		MessageBusImpl.getInstance().register(this);
 		
-		//TODO: choose option (i think they want option 2)
-		//option 1:
 		this.subscribeCustomerOrderEvent();
 
-		
-		//option 2:
-		for (String book: this.orderSchedule)
-		{
-			BookOrderEvent order= new BookOrderEvent(book, "API Service");
-			Future<OrderReceipt> orderbook=sendEvent(order);
-			OrderReceipt receipt= orderbook.get();
-			//TODO reslove
-		}
-		
-		
-		//this class need to subscribe to customer Order event and send Book order event. 
-		
-		/*
-		 * send order book event
-		 * give the customer the orderReceipt 
-		 * this class is responsible for sending Delivery Event?
-		 * 
-		 */
 		
 		
 	}
 	
 	
-	//TODO do i need to subscribe to this event? we received the order in the constructor. 
 	private void subscribeCustomerOrderEvent()
 	{
 		//callBack for customerOrderEvent
@@ -71,15 +48,13 @@ public class APIService extends MicroService{
 			@Override
 			public void call(CustomerOrderEvent c) {
 				
-				for (String book: c.getOrder())
-				{
-					orderSchedule.add(book);			
-					BookOrderEvent order= new BookOrderEvent(book, "API Service");
+				
+					orderSchedule.add(c.getOrder());			
+					BookOrderEvent order= new BookOrderEvent(c.getOrder(), "API Service", c.getCustomer());
 					Future<OrderReceipt> orderbook=sendEvent(order);
 					OrderReceipt receipt= orderbook.get();
-					//TODO reslove
-				}
-				
+					complete(c, orderbook.get());
+								
 			}
 			
 			

@@ -29,35 +29,24 @@ import bgu.spl.mics.application.passiveObjects.OrderReceipt;
 public class SellingService extends MicroService{
 	
 
-	/*
-	 * do i need to send future with each event?
-	 * need to send discount with each relevant event?
-	 */
 	
 	private MoneyRegister register;
-	private Customer customer;
 	private int discount;
 	private String book;
 	
 	
 	
-	public SellingService(ConcurrentLinkedQueue<String> CustomerOrder, Customer c) {
+	public SellingService() 
+	{
 		super("Selling Service");
 		this.register=MoneyRegister.getInstance();
-		this.customer=c;
 		this.discount=0;
-		this.book="";
 	}
 	
 	
 	public void setDiscount(int dis)
 	{
 		this.discount=dis;
-	}
-	
-	public void setBook(String book)
-	{
-		this.book=book;
 	}
 
 	
@@ -72,7 +61,7 @@ public class SellingService extends MicroService{
 		
 		this.subscribeDiscountBroadcast();
 		
-		//TODO unregister?
+		
 		
 	}
 	
@@ -88,8 +77,7 @@ public class SellingService extends MicroService{
 			@Override
 			public void call(BookOrderEvent c) {
 				
-					setBook(c.getBook());
-					ChackAvailabilityEvent check = new ChackAvailabilityEvent(c.getBook(),"Selling Service");
+					ChackAvailabilityEvent check = new ChackAvailabilityEvent(book,"Selling Service");
 					Future<Boolean> availability = sendEvent(check);
 					boolean result= availability.get();
 					if (result==true)
@@ -97,14 +85,15 @@ public class SellingService extends MicroService{
 						TakeBookEvent buy= new TakeBookEvent(c.getBook(),"Selling Service");
 						Future<OrderReceipt> Order= sendEvent(buy);
 						int toCharge= Order.get().getPrice();
-						register.chargeCreditCard(customer, toCharge);
-						//resolve? which future ?
-						//TODO finish this
+
+						register.chargeCreditCard(c.getCustomer(), toCharge);
+						
+						complete(c, Order.get());
 						
 					}
 					else
 					{
-						//result is null which future should i resolve?
+						complete(c, null);
 					}
 					
 				}

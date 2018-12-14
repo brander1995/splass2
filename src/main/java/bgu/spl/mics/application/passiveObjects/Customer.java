@@ -101,8 +101,11 @@ public class Customer {
 	//TODO check this
 	public void orderBooks(ConcurrentLinkedQueue<String> books)
 	{
-		Future<OrderReceipt> receipt= MessageBusImpl.getInstance().sendEvent(new CustomerOrderEvent("cusomer id: "+ this.id));
-		totalReceipt.add(receipt.get());
+		for (String book:books)
+		{
+			Future<OrderReceipt> receipt= MessageBusImpl.getInstance().sendEvent(new CustomerOrderEvent("cusomer id: "+ this.id, this, book));
+			totalReceipt.add(receipt.get());
+		}
 	}
 	
 	

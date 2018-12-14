@@ -3,27 +3,33 @@ package bgu.spl.mics.application.messages;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import bgu.spl.mics.Event;
+import bgu.spl.mics.application.passiveObjects.Customer;
 import bgu.spl.mics.application.passiveObjects.OrderReceipt;
 
 public class CustomerOrderEvent implements Event<OrderReceipt>{
 	
-	private ConcurrentLinkedQueue<String> cOrder;
+	private String book;
 	private String SenderName;
+	private Customer customer;
 	
-	public CustomerOrderEvent(String Sender)
+	
+	public CustomerOrderEvent(String Sender, Customer c, String BookName)
 	{
-		cOrder=new ConcurrentLinkedQueue<>();
+		this.book=BookName;
 		this.SenderName=Sender;
+		this.customer=c;
 	}
 	
-	public void insertOrder (String bookName)
+
+	
+	public String getOrder()
 	{
-		cOrder.add(bookName);
+		return this.book;
 	}
 	
-	public ConcurrentLinkedQueue<String> getOrder()
+	public Customer getCustomer()
 	{
-		return this.cOrder;
+		return this.customer;
 	}
 	
 	/*
