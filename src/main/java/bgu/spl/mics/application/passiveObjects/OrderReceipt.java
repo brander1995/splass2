@@ -23,11 +23,17 @@ public class OrderReceipt {
 	private int proccessTick;
 	
 	
-	public OrderReceipt(BookInventoryInfo book, int customerId, int issuedT, int orderT, int ProccessT)
+	public OrderReceipt(BookInventoryInfo book, int customerId, int issuedT, int orderT, int ProccessT,
+						int orderid, String Seller)
 	{
 		this.bookTitle=book.getBookTitle();
 		this.price=book.getPrice();
-		//TODO finish constructor
+		this.customer=customerId;
+		this.issuedTick=issuedT;
+		this.orderTick=orderT;
+		this.proccessTick=ProccessT;
+		this.ordedId=orderid;
+		this.seller=Seller;
 	}
 	
 	/**

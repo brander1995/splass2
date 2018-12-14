@@ -27,6 +27,7 @@ public class DeliveryVehicle {
 		this.speed=speed;
 		
 	  }
+	 
 	/**
      * Retrieves the license of this delivery vehicle.   
      */

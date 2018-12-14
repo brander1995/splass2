@@ -90,6 +90,8 @@ public class Customer {
 		return this.card.getCreditNumber();
 	}
 
+	
+	
 	public boolean ChargeCustomer(int amount)
 	{
 		return this.card.ChargeCred(amount);
