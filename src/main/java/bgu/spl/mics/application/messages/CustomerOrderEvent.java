@@ -8,10 +8,12 @@ import bgu.spl.mics.application.passiveObjects.OrderReceipt;
 public class CustomerOrderEvent implements Event<OrderReceipt>{
 	
 	private ConcurrentLinkedQueue<String> cOrder;
+	private String SenderName;
 	
-	public CustomerOrderEvent()
+	public CustomerOrderEvent(String Sender)
 	{
 		cOrder=new ConcurrentLinkedQueue<>();
+		this.SenderName=Sender;
 	}
 	
 	public void insertOrder (String bookName)
@@ -23,5 +25,9 @@ public class CustomerOrderEvent implements Event<OrderReceipt>{
 	{
 		return this.cOrder;
 	}
+	
+	/*
+	 * do we need any implementation here? in event we need only sender name? (like the example?) 
+	 */
 
 }

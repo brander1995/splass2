@@ -14,14 +14,21 @@ import bgu.spl.mics.MicroService;
  */
 public class TimeService extends MicroService{
 
+	//Singleton??
+	
+	
 	public TimeService() {
-		super("Change_This_Name");
-		// TODO Implement this
+		super("Time Service");
+		// TODO understand this microservice
 	}
 
 	@Override
 	protected void initialize() {
-		// TODO Implement this
+		// TODO Auto-generated method stub
+		
+		/*
+		 * id dont understand this class
+		 */
 		
 	}
 

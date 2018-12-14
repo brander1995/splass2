@@ -83,8 +83,8 @@ public class Customer {
 		return this.card.getCreditNumber();
 	}
 
-	public void ChargeCustomer(int amount)
+	public boolean ChargeCustomer(int amount)
 	{
-		this.card.ChargeCred(amount);
+		return this.card.ChargeCred(amount);
 	}
 }

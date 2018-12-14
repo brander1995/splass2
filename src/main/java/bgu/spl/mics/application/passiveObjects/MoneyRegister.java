@@ -69,6 +69,7 @@ public class MoneyRegister {
 	
 	public void chargeCreditCard(Customer c, int amount) {
 		
+		//TODO what should i do if the customer don't have enough money?
 		c.ChargeCustomer(amount);
 		
 	}

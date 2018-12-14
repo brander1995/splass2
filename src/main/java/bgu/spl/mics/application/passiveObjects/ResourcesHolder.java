@@ -18,12 +18,14 @@ public class ResourcesHolder {
 		private static ResourcesHolder instance= new ResourcesHolder();
 	}
 	
-	private ConcurrentLinkedQueue<DeliveryVehicle> vehiclesList;
+	private ConcurrentLinkedQueue<DeliveryVehicle> AvailableVehiclesList;
+	private ConcurrentLinkedQueue<DeliveryVehicle> occupiedVehiclesList;
 	
 	
 	private ResourcesHolder()
 	{
-		this.vehiclesList= new ConcurrentLinkedQueue<>();
+		this.AvailableVehiclesList= new ConcurrentLinkedQueue<>();
+		this.occupiedVehiclesList= new ConcurrentLinkedQueue<>();
 	}
 	
 	
@@ -54,8 +56,20 @@ public class ResourcesHolder {
      * <p>
      * @param vehicle	{@link DeliveryVehicle} to be released.
      */
+	
+	
+	//TODO: should i synch this? what happens if acquireVehicle and releaseVehicle are called at the same time?
 	public void releaseVehicle(DeliveryVehicle vehicle) {
-		//TODO: Implement this
+		
+		for (DeliveryVehicle v:occupiedVehiclesList)
+		{
+			if (v.equals(vehicle))
+			{
+				occupiedVehiclesList.remove(v);
+				AvailableVehiclesList.add(v);
+			}
+		}
+		
 	}
 	
 	/**
@@ -71,7 +85,7 @@ public class ResourcesHolder {
 		
 		for (DeliveryVehicle vehicle: vehicles)
 		{
-			this.vehiclesList.add(vehicle);
+			this.AvailableVehiclesList.add(vehicle);
 		}
 	}
 

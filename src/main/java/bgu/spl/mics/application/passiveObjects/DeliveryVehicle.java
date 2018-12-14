@@ -53,7 +53,7 @@ public class DeliveryVehicle {
      * @param distance	The distance from the store to the customer.
      */
 	
-	//TODO: address??
+	//TODO: why do we need address??
 	public void deliver(String address, int distance) {
 		
 	

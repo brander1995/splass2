@@ -17,8 +17,8 @@ public class Inventory {
 		private static Inventory instance= new Inventory();
 	}
 	
-	private ConcurrentLinkedQueue<BookInventoryInfo> inventoryList;//TODO check if AtomicList is implemented
-
+	private ConcurrentLinkedQueue<BookInventoryInfo> inventoryList;
+	
 	private Inventory() {
 		this.inventoryList= new ConcurrentLinkedQueue<BookInventoryInfo>();
 	}

@@ -12,6 +12,7 @@ public class CustomerOrderService extends MicroService {
 	@Override
 	protected void initialize() {
 		// TODO Auto-generated method stub
+		//need to send customer order to API service
 		
 	}
 

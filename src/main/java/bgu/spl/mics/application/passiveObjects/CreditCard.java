@@ -14,8 +14,10 @@ public class CreditCard {
 	}
 	
 
-	public void ChargeCred(int amount)
+	public boolean ChargeCred(int amount)
 	{
+		if (this.money.get()<amount)
+			return false;
 		int val;
 		do
 		{
@@ -23,6 +25,7 @@ public class CreditCard {
 			
 		}while (!money.compareAndSet(val, val-amount));
 		
+		return true;
 	
 	}
 	
