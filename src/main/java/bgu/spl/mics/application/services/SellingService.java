@@ -72,6 +72,8 @@ public class SellingService extends MicroService{
 		
 		this.subscribeDiscountBroadcast();
 		
+		//TODO unregister?
+		
 	}
 	
 	

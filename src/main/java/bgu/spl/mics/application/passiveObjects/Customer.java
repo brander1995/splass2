@@ -3,6 +3,11 @@
 package bgu.spl.mics.application.passiveObjects;
 
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import bgu.spl.mics.Future;
+import bgu.spl.mics.MessageBusImpl;
+import bgu.spl.mics.application.messages.CustomerOrderEvent;
 
 /**
  * Passive data-object representing a customer of the store.
@@ -16,6 +21,8 @@ public class Customer {
 	private int id;
 	private String address;
 	private CreditCard card;
+	private ConcurrentLinkedQueue<OrderReceipt> totalReceipt;
+	
 
 	
 	
@@ -25,6 +32,7 @@ public class Customer {
 		this.id=Id;
 		this.address=Address;
 		this.card=new CreditCard(CreditNumber, money);
+		this.totalReceipt= new ConcurrentLinkedQueue<>();
 	}
 	
 	/**
@@ -63,8 +71,7 @@ public class Customer {
      * @return A list of receipts.
      */
 	public List<OrderReceipt> getCustomerReceiptList() {
-		// TODO Implement this
-		return null;
+		return this.getCustomerReceiptList();
 	}
 	
 	/**
@@ -87,4 +94,15 @@ public class Customer {
 	{
 		return this.card.ChargeCred(amount);
 	}
+	
+	// i'm not sure this is the way they want us to take order from customer. 
+	//TODO check this
+	public void orderBooks(ConcurrentLinkedQueue<String> books)
+	{
+		Future<OrderReceipt> receipt= MessageBusImpl.getInstance().sendEvent(new CustomerOrderEvent("cusomer id: "+ this.id));
+		totalReceipt.add(receipt.get());
+	}
+	
+	
+	
 }
