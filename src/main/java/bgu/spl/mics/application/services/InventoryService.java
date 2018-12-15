@@ -65,14 +65,19 @@ public class InventoryService extends MicroService{
 			@Override
 			public void call(ChackAvailabilityEvent c) {
 				
+				//for the discount- im not sure its going to work
+				//TODO check this
 				setBookName(c.getName());
+				
 				
 				if (inventory.checkAvailabiltyAndGetPrice(bookName)!=-1)
 				{
+					//if available- result is true 
 					complete(c, true);
 				}
 				else
 				{
+					//if not available- result is false
 					complete(c, false);
 				}
 			}

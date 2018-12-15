@@ -1,6 +1,13 @@
 package bgu.spl.mics.application.services;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
+import bgu.spl.mics.Callback;
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.application.messages.DeliveryEvent;
+import bgu.spl.mics.application.messages.resourceEvent;
+import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
 
 /**
@@ -24,7 +31,52 @@ public class ResourceService extends MicroService{
 
 	@Override
 	protected void initialize() {
-		// TODO Auto-generated method stub
+		
+		Callback<resourceEvent> r= new Callback<resourceEvent>() {
+			
+			@Override
+			public void call(resourceEvent c) {
+				
+				Future<DeliveryVehicle> v= (Future<DeliveryVehicle>) resource.acquireVehicle();
+				DeliveryVehicle vehicle=null;
+				try {
+					//gets a vehicle free for delivery
+					vehicle = v.get();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				if (vehicle!=null)
+				{
+					
+				//sends delivery Event with vehicle
+				DeliveryEvent delivery= new DeliveryEvent(c.getAddress(), c.getDistance(), "Resource Service", vehicle);
+				Future<Boolean> result= (Future<Boolean>) sendEvent(delivery);
+				try {
+					result.get();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				//releases the vehicle when the delivery ends
+				resource.releaseVehicle(vehicle);
+				
+				}
+				
+			}
+		};
+		// TODO finish try and catch
+
+		
+		subscribeEvent(resourceEvent.class, r);
 		
 	}
 

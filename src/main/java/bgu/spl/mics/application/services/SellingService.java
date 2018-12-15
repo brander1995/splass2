@@ -5,6 +5,7 @@ import bgu.spl.mics.application.messages.ChackAvailabilityEvent;
 import bgu.spl.mics.application.messages.CustomerOrderEvent;
 import bgu.spl.mics.application.messages.DiscountBroadcast;
 import bgu.spl.mics.application.messages.TakeBookEvent;
+import bgu.spl.mics.application.messages.resourceEvent;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -82,15 +83,38 @@ public class SellingService extends MicroService{
 					boolean result= availability.get();
 					if (result==true)
 					{
+						//if available - try to take the book from the inventory
 						TakeBookEvent buy= new TakeBookEvent(c.getBook(),"Selling Service");
 						Future<OrderReceipt> Order= sendEvent(buy);
-						int toCharge= Order.get().getPrice();
-
-						register.chargeCreditCard(c.getCustomer(), toCharge);
 						
-						complete(c, Order.get());
+						//if "takeBook" didn't succeed- return null as a result
+						if (Order.get()==null)
+						{
+							complete(c,null);
+						}
+						else 
+						{
+							
+						//if TakeBook succeed - deliver the book to the customer		
+						resourceEvent deliver= new resourceEvent(c.getCustomer().getAddress(), c.getCustomer().getDistance(), "Selling Service");
+						Future<Boolean> delivery= sendEvent(deliver);
+						boolean delivaryResult=delivery.get();
+						if (delivaryResult==true)
+						{
+							//if delivery succeed- charge customer and send receipt
+							int toCharge= Order.get().getPrice();//the price in the receipt is the price after discount
+
+							register.chargeCreditCard(c.getCustomer(), toCharge);
+							complete(c, Order.get());// sends receipt as a result
+						}
+						//if delivery failed- return null as a result
+						else
+							complete(c, null);
+						}	
 						
 					}
+					
+					//if book isn't available -return null as a result
 					else
 					{
 						complete(c, null);

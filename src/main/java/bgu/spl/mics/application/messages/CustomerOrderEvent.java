@@ -32,8 +32,11 @@ public class CustomerOrderEvent implements Event<OrderReceipt>{
 		return this.customer;
 	}
 	
-	/*
-	 * do we need any implementation here? in event we need only sender name? (like the example?) 
-	 */
+	
+	public String getSender()
+	{
+		return this.SenderName;
+	}
+
 
 }

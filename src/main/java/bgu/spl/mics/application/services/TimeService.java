@@ -1,5 +1,7 @@
 package bgu.spl.mics.application.services;
 
+import bgu.spl.mics.MessageBus;
+import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 
 /**
@@ -12,12 +14,22 @@ import bgu.spl.mics.MicroService;
  * You can add private fields and public methods to this class.
  * You MAY change constructor signatures and even add new public constructors.
  */
-public class TimeService extends MicroService{
 
-	//Singleton??
+
+
+public class TimeService extends MicroService{
+	private static class TimeTickHolder{
+		private static TimeService instance= new TimeService();
+	}
+	
+	//singleton
+	public static TimeService getInstance()
+	{
+		return TimeTickHolder.instance;
+	}
 	
 	
-	public TimeService() {
+	private TimeService() {
 		super("Time Service");
 		// TODO understand this microservice
 	}
@@ -26,10 +38,7 @@ public class TimeService extends MicroService{
 	protected void initialize() {
 		// TODO Auto-generated method stub
 		
-		/*
-		 * id dont understand this class
-		 */
-		
+
 	}
 
 }

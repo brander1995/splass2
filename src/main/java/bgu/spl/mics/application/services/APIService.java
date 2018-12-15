@@ -49,10 +49,14 @@ public class APIService extends MicroService{
 			public void call(CustomerOrderEvent c) {
 				
 				
-					orderSchedule.add(c.getOrder());			
+					orderSchedule.add(c.getOrder());		
+					
+					//sends the customer order
 					BookOrderEvent order= new BookOrderEvent(c.getOrder(), "API Service", c.getCustomer());
 					Future<OrderReceipt> orderbook=sendEvent(order);
 					OrderReceipt receipt= orderbook.get();
+					
+					//sends the  receipt as a result 
 					complete(c, orderbook.get());
 								
 			}

@@ -42,6 +42,9 @@ public class LogisticsService extends MicroService {
 			public void call(DeliveryEvent c) {
 				DeliveryVehicle vehicle=c.getVehicle();
 				vehicle.deliver(c.getAddress(), c.getDistance());
+				
+				//will i ever send false as a Delivery result?
+				//TODO check this
 				complete(c, true);
 				
 			}
