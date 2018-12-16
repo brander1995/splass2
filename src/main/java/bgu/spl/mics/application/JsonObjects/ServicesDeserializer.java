@@ -2,6 +2,7 @@ package bgu.spl.mics.application.JsonObjects;
 
 import java.lang.reflect.Type;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -11,6 +12,10 @@ import com.google.gson.JsonParseException;
 
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.services.APIService;
+import bgu.spl.mics.application.services.InventoryService;
+import bgu.spl.mics.application.services.LogisticsService;
+import bgu.spl.mics.application.services.ResourceService;
+import bgu.spl.mics.application.services.SellingService;
 import bgu.spl.mics.application.services.TimeService;
 
 public class ServicesDeserializer implements JsonDeserializer<MicroService[]>{
@@ -25,9 +30,31 @@ public class ServicesDeserializer implements JsonDeserializer<MicroService[]>{
    	    final int amountOfLogService = jsonObject.get("logistcs").getAsInt();
    	    final int amountOfResourcesServices = jsonObject.get("resourcesService").getAsInt();
    	    APIService[] currServ = context.deserialize(jsonObject.get("customers"), APIService[].class);
-   	    
-		// TODO Auto-generated method stub
-		return null;
-	}
+		ConcurrentLinkedQueue<MicroService>  myQueue = new ConcurrentLinkedQueue<>();
 
+		
+		myQueue.add(tS);
+		for (int i = 0; i < amountOfSellService; i++) {
+			myQueue.add(new SellingService());
+		}
+		
+		for (int i = 0; i < amountOfInvSercive; i++) {
+			myQueue.add(new InventoryService());
+		}
+		
+		for (int i = 0; i < amountOfLogService; i++) {
+			myQueue.add(new LogisticsService());
+		}
+		for (int i = 0; i < amountOfResourcesServices; i++) {
+			myQueue.add(new ResourceService());
+		}
+		
+		for (int j = 0; j < currServ.length; j++) {
+			myQueue.add(currServ[j]);
+		}
+		// TODO Auto-generated method stub
+		
+		return myQueue.toArray(new MicroService[1]);
+	}
+  
 }

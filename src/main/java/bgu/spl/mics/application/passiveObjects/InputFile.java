@@ -5,8 +5,8 @@ import java.util.List;
 import bgu.spl.mics.MicroService;
 
 public class InputFile {
-	Inventory intialInventory;
-	ResourcesHolder IntialResources;
-	List<MicroService> initialServices;
+	public Inventory intialInventory;
+	public ResourcesHolder IntialResources;
+	public List<MicroService> initialServices;
 	
 }

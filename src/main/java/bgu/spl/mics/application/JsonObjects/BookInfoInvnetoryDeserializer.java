@@ -10,7 +10,7 @@ import com.google.gson.JsonParseException;
 
 import bgu.spl.mics.application.passiveObjects.BookInventoryInfo;
 
-public class BookInventoryDeserializer implements JsonDeserializer<BookInventoryInfo> {
+public class BookInfoInvnetoryDeserializer implements JsonDeserializer<BookInventoryInfo> {
 
 	@Override
 	public BookInventoryInfo deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
