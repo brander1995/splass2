@@ -10,12 +10,15 @@ public class BookOrderEvent implements Event<OrderReceipt> {
 	private String bookName;
 	private String senderName;
 	private Customer customer;
+	private int OrderTick;
 	
-	public BookOrderEvent(String book, String Sender , Customer  c)
+	public BookOrderEvent(String book, String Sender , Customer  c, int tick)
 	{
 		this.bookName=book;
 		this.senderName=Sender;
 		this.customer=c;
+		
+		this.OrderTick = tick;
 	}
 	
 	

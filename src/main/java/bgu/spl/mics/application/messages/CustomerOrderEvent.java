@@ -10,33 +10,31 @@ public class CustomerOrderEvent implements Event<OrderReceipt>{
 	
 	private String book;
 	private String SenderName;
-	private Customer customer;
 	
-	
-	public CustomerOrderEvent(String Sender, Customer c, String BookName)
-	{
-		this.book=BookName;
-		this.SenderName=Sender;
-		this.customer=c;
+	// Adding the timer for an order
+	private Integer tick;
+		
+	public String getSenderName() {
+		return SenderName;
+	}
+
+	public void setSenderName(String senderName) {
+		SenderName = senderName;
 	}
 	
-
-	
+	public CustomerOrderEvent(String BookName, Integer startingTick)
+	{
+		this.book=BookName;
+		this.tick = startingTick;
+	}
+		
 	public String getOrder()
 	{
 		return this.book;
 	}
-	
-	public Customer getCustomer()
-	{
-		return this.customer;
-	}
-	
-	
+
 	public String getSender()
 	{
 		return this.SenderName;
 	}
-
-
 }

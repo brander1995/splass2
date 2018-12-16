@@ -8,6 +8,7 @@ import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.BookOrderEvent;
 import bgu.spl.mics.application.messages.CustomerOrderEvent;
+import bgu.spl.mics.application.passiveObjects.Customer;
 import bgu.spl.mics.application.passiveObjects.OrderReceipt;
 
 /**
@@ -22,11 +23,23 @@ import bgu.spl.mics.application.passiveObjects.OrderReceipt;
 public class APIService extends MicroService{
 
 	ConcurrentLinkedQueue<String> orderSchedule;
+	Customer customerConnected;
+	ConcurrentLinkedQueue<CustomerOrderEvent> orderSchedule1;
+	/*
+	 * So this will be the representation of an order for a single user "Online".
+	 * 
+	 * */
+	
+	public APIService(Customer cust,ConcurrentLinkedQueue<CustomerOrderEvent> orderSched )
+	{
+		super("API Service");
+		this.customerConnected = cust;
+		this.orderSchedule1 = orderSched;
+	}
 	
 	public APIService() {
 		super("API Service");
 		orderSchedule= new ConcurrentLinkedQueue<>();
-
 	}
 
 	@Override
@@ -40,9 +53,11 @@ public class APIService extends MicroService{
 	}
 	
 	
+	
+	// What do we do with this?
 	private void subscribeCustomerOrderEvent()
 	{
-		//callBack for customerOrderEvent
+/*		//callBack for customerOrderEvent
 		Callback<CustomerOrderEvent> customerOrder= new Callback<CustomerOrderEvent>() {
 
 			@Override
@@ -65,6 +80,6 @@ public class APIService extends MicroService{
 		};//end of customerOrder
 		
 		this.subscribeEvent(CustomerOrderEvent.class, customerOrder);
-		
+	*/	
 	}
 }

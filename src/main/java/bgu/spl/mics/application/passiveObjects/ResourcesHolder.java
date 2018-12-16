@@ -81,8 +81,6 @@ public class ResourcesHolder {
 	
 	//TODO: should i synch this?
 	public void load(DeliveryVehicle[] vehicles) {
-		
-		
 		for (DeliveryVehicle vehicle: vehicles)
 		{
 			this.AvailableVehiclesList.add(vehicle);

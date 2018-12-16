@@ -3,6 +3,7 @@
 package bgu.spl.mics.application.passiveObjects;
 
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import bgu.spl.mics.Future;
@@ -23,8 +24,17 @@ public class Customer {
 	private CreditCard card;
 	private ConcurrentLinkedQueue<OrderReceipt> totalReceipt;
 	
+	private int distance;
 
 	
+	public Customer(String Name, int Id, String Address, CreditCard cCard)
+	{
+		this.name=Name;
+		this.id=Id;
+		this.address=Address;
+		this.card = cCard;
+		this.totalReceipt= new ConcurrentLinkedQueue<>();
+	}
 	
 	public Customer(String Name, int Id, String Address, int CreditNumber, int money)
 	{
@@ -61,10 +71,13 @@ public class Customer {
      */
 	public int getDistance() {
 		// TODO Implement this
-		return 0;
+		return this.distance;
 	}
 
-	
+	public void setDistance(int distance) {
+		this.distance = distance;
+	}
+
 	/**
      * Retrieves a list of receipts for the purchases this customer has made.
      * <p>
@@ -99,11 +112,14 @@ public class Customer {
 	
 	// i'm not sure this is the way they want us to take order from customer. 
 	//TODO check this
-	public void orderBooks(ConcurrentLinkedQueue<String> books)
+	public void orderBooks(ConcurrentLinkedQueue<Entry<String, Integer>> books)
 	{
-		for (String book:books)
+		for (Entry<String, Integer> book:books)
 		{
-			Future<OrderReceipt> receipt= MessageBusImpl.getInstance().sendEvent(new CustomerOrderEvent("cusomer id: "+ this.id, this, book));
+			//Future<OrderReceipt> receipt= MessageBusImpl.getInstance().sendEvent(new CustomerOrderEvent("cusomer id: "+ this.id, this, book.getKey(), book.getValue()));
+			CustomerOrderEvent cevent = new CustomerOrderEvent(book.getKey(), book.getValue());
+			cevent.setSenderName(this.getName());
+			Future<OrderReceipt> receipt= MessageBusImpl.getInstance().sendEvent(cevent);
 			totalReceipt.add(receipt.get());
 		}
 	}

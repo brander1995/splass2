@@ -13,6 +13,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonStreamParser;
 
+import bgu.spl.mics.application.passiveObjects.InputFile;
+
 /** This is the Main class of the application. You should parse the input file, 
  * create the different instances of the objects, and run the system.
  * In the end, you should output serialized objects.
@@ -49,7 +51,8 @@ public class BookStoreRunner {
 		while (p.hasNext()) {
 	       JsonElement e = p.next();
 	       if (e.isJsonObject()) {
-	           Map m = gson.fromJson(e, Map.class);
+	   		   InputFile testFile = gson.fromJson(e, InputFile.class);
+	    	 //  Map m = gson.fromJson(e, Map.class);
 	           System.out.println("HEllO");
 	           /* do something useful with JSON object .. */
 		  }
@@ -57,7 +60,10 @@ public class BookStoreRunner {
     		       
     	
     	// Deserizlize the output files.
-		}	
+		}
+		
+
+				
     }
 }
     
