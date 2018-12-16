@@ -36,10 +36,7 @@ public class InputFileDeserializer implements JsonDeserializer<InputFile> {
 		
 		MicroService[] testyTest2 = context.deserialize(jsonObject.get("services") , MicroService[].class);
 		filyFile.initialServices =  Arrays.asList(testyTest2);
-		for (MicroService microService : testyTest2) {
-			microService.run();
-		}
-		// TODO Auto-generated method stub1
+
 		return filyFile;
 	}
 

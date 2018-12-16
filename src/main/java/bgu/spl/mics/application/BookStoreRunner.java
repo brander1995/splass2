@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.util.LinkedList;
 import java.util.Map;
 
 import com.google.gson.Gson;
@@ -74,17 +75,25 @@ public class BookStoreRunner {
 		gsonBuilder.registerTypeAdapter(APIService.class, new APIServiceDeserializer());
 		gsonBuilder.registerTypeAdapter(CustomerOrderEvent.class, new OrderEventDeserializer());
 	    final Gson gson = gsonBuilder.create();
-
+	    InputFile testFile = null;
 		while (p.hasNext()) {
 	       JsonElement e = p.next();
 	       if (e.isJsonObject()) {
-	   		   InputFile testFile = gson.fromJson(e, InputFile.class);
-	    	 //  Map m = gson.fromJson(e, Map.class);
-	           System.out.println("HEllO");
-	           /* do something useful with JSON object .. */
+	   		   testFile = gson.fromJson(e, InputFile.class);
 		  }
-	       
-	       
+	     LinkedList<Thread> threadList = new LinkedList<>();
+	     if (testFile == null)
+	     {
+	    	 break;
+	     }
+	     
+	     for (MicroService mService : testFile.initialServices) {
+			Thread currThread = new Thread(mService);
+			threadList.add(currThread);
+			currThread.start();
+		}  
+	     
+	      System.out.println("HEllO");
 		  /* handle other JSON data structures */
     	         
     	

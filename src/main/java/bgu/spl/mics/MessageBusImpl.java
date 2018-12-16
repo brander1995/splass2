@@ -46,13 +46,22 @@ public class MessageBusImpl implements MessageBus {
 	
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
-		EventBus.get(type.getClass().getName()).getMicroServices().add(m);
+		if (!EventBus.containsKey(type.getName()))
+		{
+			EventBus.put(type.getName(), new MicroServiceList());
+		}
+		EventBus.get(type.getName()).getMicroServices().add(m);
 		
 	}
 
 	@Override
 	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
-		BroadcastBus.get(type.getClass().getName()).getMicroServices().add(m);
+		if (!BroadcastBus.containsKey(type.getName()))
+		{
+			BroadcastBus.put(type.getName(), new MicroServiceList());
+		}
+		
+		BroadcastBus.get(type.getName()).getMicroServices().add(m);
 
 	}
 

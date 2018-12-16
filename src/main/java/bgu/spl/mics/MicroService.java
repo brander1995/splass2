@@ -181,6 +181,10 @@ public abstract class MicroService implements Runnable {
 				{
 					for (CallbackHandler<Object> currEv : this.eventCallbackQueue)
 					{
+						if (msg == null)
+						{
+							break;
+						}
 						if (currEv.EventToCallback((Event<Object>)msg) != null)
 						{
 							currEv.getCallbackRegardless().call(msg);
