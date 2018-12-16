@@ -70,6 +70,8 @@ public class TimeService extends MicroService{
 	
 	@Override
 	protected void initialize() {
+		
+		MessageBusImpl.getInstance().register(this);
 		// TODO Auto-generated method stub
 		
 		// We should set a timer that counts back ticks on the amount of time delegated by the input.

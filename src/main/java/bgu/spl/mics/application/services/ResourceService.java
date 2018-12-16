@@ -4,6 +4,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import bgu.spl.mics.Callback;
+import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.DeliveryEvent;
 import bgu.spl.mics.application.messages.TickBroadcast;
@@ -34,6 +35,8 @@ public class ResourceService extends MicroService{
 	@Override
 	protected void initialize() {
 		
+		
+		MessageBusImpl.getInstance().register(this);
 		this.subscribeResourceEvent();
 		this.SubscribeTimeBroadcast();
 		
