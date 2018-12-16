@@ -38,6 +38,11 @@ public class BookOrderEvent implements Event<OrderReceipt> {
 		return this.customer;
 	}
 	
+	public int getOtderTick()
+	{
+		return this.OrderTick;
+	}
+	
 	
 
 }

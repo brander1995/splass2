@@ -1,13 +1,18 @@
 package bgu.spl.mics.application.services;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import bgu.spl.mics.Callback;
+import bgu.spl.mics.Discount;
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.BookOrderEvent;
 import bgu.spl.mics.application.messages.ChackAvailabilityEvent;
 import bgu.spl.mics.application.messages.DiscountBroadcast;
 import bgu.spl.mics.application.messages.TakeBookEvent;
+import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.passiveObjects.Inventory;
+import bgu.spl.mics.application.passiveObjects.OrderReceipt;
 
 /**
  * InventoryService is in charge of the book inventory and stock.
@@ -22,28 +27,38 @@ import bgu.spl.mics.application.passiveObjects.Inventory;
 public class InventoryService extends MicroService{
 
 	Inventory inventory;
-	String bookName;
-	int discount;
+	ConcurrentLinkedQueue<Discount> discountList;
+	int orderId;
+	int Curtick=-1;
 	
 	
-	public InventoryService() {
-		super("Invemtory Service");
+	public InventoryService(Integer nameNum) {
+		super("Invemtory Service"+nameNum.toString());
 		this.inventory=Inventory.getInstance();
-		this.bookName="";
-		this.discount=0;
-	}
-	
-	
-	private void setDiscount (int dis)
-	{
-		this.discount=dis;
-	}
-	
-	private void setBookName(String name)
-	{
-		this.bookName=name;
-	}
+		this.discountList= new ConcurrentLinkedQueue<>();
+		this.orderId=0;
 
+	}
+	
+	
+	private void setDiscount (int dis, String book)
+	{
+		boolean flag=false;
+		for (Discount b:discountList)
+		{
+			if (b.getBook().equals(book))
+			{
+				b.setDiscount(dis);
+				flag=true;
+			}
+		}
+		if (flag==false)
+			discountList.add(new Discount(book, dis));
+	}
+	
+
+
+	
 	@Override
 	protected void initialize() {
 		
@@ -54,7 +69,26 @@ public class InventoryService extends MicroService{
 		this.subscribeTakeBook();
 		
 		this.subscribeDiscount();
+		
+		this.SubscribeTimeBroadcast();
 
+	}
+	
+	
+	private void SubscribeTimeBroadcast()
+	{
+		Callback<TickBroadcast> tick= new Callback<TickBroadcast>() {
+
+			@Override
+			public void call(TickBroadcast c) {
+				Curtick=c.currentTick();
+				
+			}
+			
+			
+		};
+		
+		super.subscribeBroadcast(TickBroadcast.class, tick);
 	}
 	
 	
@@ -65,12 +99,9 @@ public class InventoryService extends MicroService{
 			@Override
 			public void call(ChackAvailabilityEvent c) {
 				
-				//for the discount- im not sure its going to work
-				//TODO check this
-				setBookName(c.getName());
 				
 				
-				if (inventory.checkAvailabiltyAndGetPrice(bookName)!=-1)
+				if (inventory.checkAvailabiltyAndGetPrice(c.getName())!=-1)
 				{
 					//if available- result is true 
 					complete(c, true);
@@ -97,8 +128,16 @@ public class InventoryService extends MicroService{
 			@Override
 			public void call(TakeBookEvent c) {
 				
-				
-				// TODO Auto-generated method stub
+				inventory.take(c.getBook());
+				int price=inventory.checkAvailabiltyAndGetPrice(c.getBook());
+				for (Discount dis: discountList)
+				{
+					if (dis.getBook().equals(c.getBook()))
+						price=price*(dis.getDiscount()/100);
+				}
+				OrderReceipt receipt=new OrderReceipt(c.getBook(), price,c.getCustomerId() , Curtick, c.getOrderTick(), c.getProccessTick(), orderId, c.getSender());
+				orderId++;
+				complete(c, receipt);
 				
 			}
 		};
@@ -117,8 +156,7 @@ public class InventoryService extends MicroService{
 			@Override
 			public void call(DiscountBroadcast c) {
 				
-				if(c.getBook().equals(bookName))
-					setDiscount(c.getPercent());
+				setDiscount(c.getPercent(), c.getBook());
 				
 			}
 			

@@ -17,7 +17,7 @@ import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 import bgu.spl.mics.application.services.APIService;
 
 public class APIServiceDeserializer implements JsonDeserializer<APIService> {
-
+	private static int counter=0;
 	@Override
 	public APIService deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 			throws JsonParseException {
@@ -34,7 +34,7 @@ public class APIServiceDeserializer implements JsonDeserializer<APIService> {
 		
 		final APIService rService = new APIService( currCust,
 													// Wanna know why we can't have nice things? this is why we can't have nice things.
-													new ConcurrentLinkedQueue<CustomerOrderEvent>(Arrays.asList(orderEvents)));
+													new ConcurrentLinkedQueue<CustomerOrderEvent>(Arrays.asList(orderEvents)),++counter);
 		
 		// TODO Auto-generated method stub1
 		return rService;

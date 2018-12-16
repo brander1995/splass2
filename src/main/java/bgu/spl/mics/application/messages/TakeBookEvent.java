@@ -7,11 +7,17 @@ public class TakeBookEvent implements Event<OrderReceipt>{
 	
 	private String bookName;
 	private String senderName;
+	private int customerId;
+	int orderTick;
+	int proccessTick;
 	
-	public TakeBookEvent(String book, String sender)
+	public TakeBookEvent(String book, String sender, int cId, int Ordertick, int proccesstick)
 	{
 		this.bookName=book;
 		this.senderName=sender;
+		this.customerId=cId;
+		this.orderTick=Ordertick;
+		this.proccessTick=proccesstick;
 	}
 	
 	
@@ -25,6 +31,21 @@ public class TakeBookEvent implements Event<OrderReceipt>{
 	public String getSender()
 	{
 		return this.senderName;
+	}
+	
+	public int getCustomerId()
+	{
+		return this.customerId;
+	}
+	
+	public int getOrderTick()
+	{
+		return this.orderTick;
+	}
+	
+	public int getProccessTick()
+	{
+		return this.proccessTick;
 	}
 	
 

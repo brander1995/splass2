@@ -5,6 +5,7 @@ import bgu.spl.mics.application.messages.ChackAvailabilityEvent;
 import bgu.spl.mics.application.messages.CustomerOrderEvent;
 import bgu.spl.mics.application.messages.DiscountBroadcast;
 import bgu.spl.mics.application.messages.TakeBookEvent;
+import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.messages.resourceEvent;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -34,12 +35,12 @@ public class SellingService extends MicroService{
 	private MoneyRegister register;
 	private int discount;
 	private String book;
+	int Curtick=-1;
 	
 	
-	
-	public SellingService() 
+	public SellingService(Integer nameNum) 
 	{
-		super("Selling Service");
+		super("Selling Service"+nameNum.toString());
 		this.register=MoneyRegister.getInstance();
 		this.discount=0;
 	}
@@ -62,11 +63,29 @@ public class SellingService extends MicroService{
 		
 		this.subscribeDiscountBroadcast();
 		
+		this.SubscribeTimeBroadcast();
+		
 		
 		
 	}
 	
 	
+	
+	private void SubscribeTimeBroadcast()
+	{
+		Callback<TickBroadcast> tick= new Callback<TickBroadcast>() {
+
+			@Override
+			public void call(TickBroadcast c) {
+				Curtick=c.currentTick();
+				
+			}
+			
+			
+		};
+		
+		super.subscribeBroadcast(TickBroadcast.class, tick);
+	}
 	
 	
 	private void subscribeBookOrderEvent()
@@ -78,13 +97,14 @@ public class SellingService extends MicroService{
 			@Override
 			public void call(BookOrderEvent c) {
 				
-					ChackAvailabilityEvent check = new ChackAvailabilityEvent(book,"Selling Service");
+					int ProccessTick=Curtick;
+					ChackAvailabilityEvent check = new ChackAvailabilityEvent(c.getBook(),"Selling Service");
 					Future<Boolean> availability = sendEvent(check);
 					boolean result= availability.get();
 					if (result==true)
 					{
 						//if available - try to take the book from the inventory
-						TakeBookEvent buy= new TakeBookEvent(c.getBook(),"Selling Service");
+						TakeBookEvent buy= new TakeBookEvent(c.getBook(),"Selling Service",c.getCustomer().getId(),c.getOtderTick(),ProccessTick);
 						Future<OrderReceipt> Order= sendEvent(buy);
 						
 						//if "takeBook" didn't succeed- return null as a result

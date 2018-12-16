@@ -6,6 +6,7 @@ import java.util.concurrent.Future;
 import bgu.spl.mics.Callback;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.DeliveryEvent;
+import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.messages.resourceEvent;
 import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
@@ -22,16 +23,24 @@ import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
 public class ResourceService extends MicroService{
 
 	ResourcesHolder resource;
+	int Curtick=-1;
 	
 	
-	public ResourceService() {
-		super("Resource Service");
+	public ResourceService(Integer nameNum) {
+		super("Resource Service"+nameNum.toString());
 		this.resource=ResourcesHolder.getInstance();
 	}
 
 	@Override
 	protected void initialize() {
 		
+		this.subscribeResourceEvent();
+		this.SubscribeTimeBroadcast();
+		
+	}
+	
+	private void subscribeResourceEvent()
+	{
 		Callback<resourceEvent> r= new Callback<resourceEvent>() {
 			
 			@Override
@@ -77,7 +86,24 @@ public class ResourceService extends MicroService{
 
 		
 		subscribeEvent(resourceEvent.class, r);
-		
 	}
+	
+	
+	private void SubscribeTimeBroadcast()
+	{
+		Callback<TickBroadcast> tick= new Callback<TickBroadcast>() {
+
+			@Override
+			public void call(TickBroadcast c) {
+				Curtick=c.currentTick();
+				
+			}
+			
+			
+		};
+		
+		super.subscribeBroadcast(TickBroadcast.class, tick);
+	}
+	
 
 }

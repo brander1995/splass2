@@ -18,13 +18,21 @@ import bgu.spl.mics.MicroService;
 
 
 public class TimeService extends MicroService{
-	
+	private static class TimeTickHolder{
+		private static TimeService instance= new TimeService();
+	}
 	// The amount of milliseconds between ticks.
 	int tickLength = 0;
 	
 	// How many ticks till death.
 	int amountOfTicks = 0;
 	
+	
+	
+	private TimeService() {
+		super("Time Service");
+		// TODO understand this microservice
+	}
 	public int getTickLength() {
 		return tickLength;
 	}
@@ -44,9 +52,7 @@ public class TimeService extends MicroService{
 		this.amountOfTicks = amountOfTicks;
 	}
 
-	private static class TimeTickHolder{
-		private static TimeService instance= new TimeService();
-	}
+
 	
 	//singleton
 	public static TimeService getInstance()
@@ -55,10 +61,7 @@ public class TimeService extends MicroService{
 	}
 	
 	
-	private TimeService() {
-		super("Time Service");
-		// TODO understand this microservice
-	}
+
 
 	private int UpdateTicks()
 	{
