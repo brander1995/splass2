@@ -13,14 +13,23 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonStreamParser;
 
+import bgu.spl.mics.MicroService;
+import bgu.spl.mics.application.JsonObjects.APIServiceDeserializer;
 import bgu.spl.mics.application.JsonObjects.BookInfoInvnetoryDeserializer;
 import bgu.spl.mics.application.JsonObjects.InputFileDeserializer;
+import bgu.spl.mics.application.JsonObjects.OrderEventDeserializer;
 import bgu.spl.mics.application.JsonObjects.ResourcesHolderDeserializer;
+import bgu.spl.mics.application.JsonObjects.ServicesDeserializer;
+import bgu.spl.mics.application.JsonObjects.TimeDeserializer;
 import bgu.spl.mics.application.JsonObjects.VehicleDeserializer;
+import bgu.spl.mics.application.messages.CustomerOrderEvent;
 import bgu.spl.mics.application.passiveObjects.BookInventoryInfo;
 import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 import bgu.spl.mics.application.passiveObjects.InputFile;
+import bgu.spl.mics.application.passiveObjects.Inventory;
 import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
+import bgu.spl.mics.application.services.APIService;
+import bgu.spl.mics.application.services.TimeService;
 
 /** This is the Main class of the application. You should parse the input file, 
  * create the different instances of the objects, and run the system.
@@ -53,12 +62,17 @@ public class BookStoreRunner {
 			e1.printStackTrace();
 		}
 		
+		// Generate the gson bulder that will read the input json
 	    final GsonBuilder gsonBuilder = new GsonBuilder();
 		JsonStreamParser p = new JsonStreamParser(r);
 	    gsonBuilder.registerTypeAdapter(BookInventoryInfo.class, new BookInfoInvnetoryDeserializer());
 		gsonBuilder.registerTypeAdapter(ResourcesHolder.class, new ResourcesHolderDeserializer());
 		gsonBuilder.registerTypeAdapter(DeliveryVehicle.class, new VehicleDeserializer());
 		gsonBuilder.registerTypeAdapter(InputFile.class, new InputFileDeserializer());
+		gsonBuilder.registerTypeAdapter(MicroService[].class, new ServicesDeserializer());
+		gsonBuilder.registerTypeAdapter(TimeService.class, new TimeDeserializer());
+		gsonBuilder.registerTypeAdapter(APIService.class, new APIServiceDeserializer());
+		gsonBuilder.registerTypeAdapter(CustomerOrderEvent.class, new OrderEventDeserializer());
 	    final Gson gson = gsonBuilder.create();
 
 		while (p.hasNext()) {
@@ -69,8 +83,10 @@ public class BookStoreRunner {
 	           System.out.println("HEllO");
 	           /* do something useful with JSON object .. */
 		  }
+	       
+	       
 		  /* handle other JSON data structures */
-    		       
+    	         
     	
     	// Deserizlize the output files.
 		}

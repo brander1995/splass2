@@ -164,7 +164,7 @@ public abstract class MicroService implements Runnable {
 	@Override
     public final void run() {
         initialize();
-        
+        this.messageBus = MessageBusImpl.getInstance();
         // Receives the message from the message bus
         // Handles the message if one exists,
         // other wise just sit and wait for one.

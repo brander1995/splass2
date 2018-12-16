@@ -27,26 +27,26 @@ public class ServicesDeserializer implements JsonDeserializer<MicroService[]>{
    	    TimeService tS = context.deserialize(jsonObject.get("time"), TimeService.class);
    	    final int amountOfSellService = jsonObject.get("selling").getAsInt();
    	    final int amountOfInvSercive = jsonObject.get("inventoryService").getAsInt();
-   	    final int amountOfLogService = jsonObject.get("logistcs").getAsInt();
+   	    final int amountOfLogService = jsonObject.get("logistics").getAsInt();
    	    final int amountOfResourcesServices = jsonObject.get("resourcesService").getAsInt();
    	    APIService[] currServ = context.deserialize(jsonObject.get("customers"), APIService[].class);
 		ConcurrentLinkedQueue<MicroService>  myQueue = new ConcurrentLinkedQueue<>();
 
 		
 		myQueue.add(tS);
-		for (int i = 0; i < amountOfSellService; i++) {
-			myQueue.add(new SellingService());
+		for (int i = 1; i <= amountOfSellService; i++) {
+			myQueue.add(new SellingService(i));
 		}
 		
-		for (int i = 0; i < amountOfInvSercive; i++) {
-			myQueue.add(new InventoryService());
+		for (int i = 1; i <= amountOfInvSercive; i++) {
+			myQueue.add(new InventoryService(i));
 		}
 		
-		for (int i = 0; i < amountOfLogService; i++) {
-			myQueue.add(new LogisticsService());
+		for (int i = 1; i <= amountOfLogService; i++) {
+			myQueue.add(new LogisticsService(i));
 		}
-		for (int i = 0; i < amountOfResourcesServices; i++) {
-			myQueue.add(new ResourceService());
+		for (int i = 1; i <= amountOfResourcesServices; i++) {
+			myQueue.add(new ResourceService(i));
 		}
 		
 		for (int j = 0; j < currServ.length; j++) {

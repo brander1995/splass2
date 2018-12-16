@@ -2,6 +2,7 @@ package bgu.spl.mics.application.JsonObjects;
 
 import java.io.FileFilter;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -9,6 +10,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
+import bgu.spl.mics.MessageBus;
+import bgu.spl.mics.MessageBusImpl;
+import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.passiveObjects.BookInventoryInfo;
 import bgu.spl.mics.application.passiveObjects.InputFile;
 import bgu.spl.mics.application.passiveObjects.Inventory;
@@ -26,10 +30,17 @@ public class InputFileDeserializer implements JsonDeserializer<InputFile> {
 		filyFile.intialInventory = Inventory.getInstance();
 		filyFile.intialInventory.load(myBooks);
 		
-		filyFile.IntialResources = context.deserialize(jsonObject.get("initialResources"), ResourcesHolder.class);
+		ResourcesHolder[] testyTest = context.deserialize(jsonObject.get("initialResources"), ResourcesHolder[].class);
+		filyFile.IntialResources = ResourcesHolder.getInstance();
+		filyFile.IntialResources = testyTest[0];
 		
+		MicroService[] testyTest2 = context.deserialize(jsonObject.get("services") , MicroService[].class);
+		filyFile.initialServices =  Arrays.asList(testyTest2);
+		for (MicroService microService : testyTest2) {
+			microService.run();
+		}
 		// TODO Auto-generated method stub1
-		return null;
+		return filyFile;
 	}
 
 }
