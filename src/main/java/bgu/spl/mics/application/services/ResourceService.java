@@ -7,6 +7,7 @@ import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.DeliveryEvent;
 import bgu.spl.mics.application.messages.TickBroadcast;
+import bgu.spl.mics.application.messages.die;
 import bgu.spl.mics.application.messages.resourceEvent;
 import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
@@ -25,6 +26,7 @@ public class ResourceService extends MicroService{
 	private ResourcesHolder resource;
 	int Curtick=-1;
 	String name;
+	boolean die=false;
 	
 	
 	public ResourceService(Integer nameNum) {
@@ -40,6 +42,7 @@ public class ResourceService extends MicroService{
 		MessageBusImpl.getInstance().register(this);
 		this.subscribeResourceEvent();
 		this.SubscribeTimeBroadcast();
+		this.subscribeDieBroadcast();
 		
 	}
 	
@@ -90,6 +93,24 @@ public class ResourceService extends MicroService{
 		};
 		
 		super.subscribeBroadcast(TickBroadcast.class, tick);
+	}
+	
+	
+	private void subscribeDieBroadcast()
+	{
+		Callback<die> terminate= new Callback<die>() {
+			
+			@Override
+			public void call(die c) {
+				if(c.getTerminate())
+					die=true;
+					
+				
+			}
+		};
+			
+		subscribeBroadcast(die.class, terminate);
+
 	}
 	
 

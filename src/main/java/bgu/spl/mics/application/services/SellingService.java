@@ -7,6 +7,7 @@ import bgu.spl.mics.application.messages.DeliveryEvent;
 import bgu.spl.mics.application.messages.DiscountBroadcast;
 import bgu.spl.mics.application.messages.TakeBookEvent;
 import bgu.spl.mics.application.messages.TickBroadcast;
+import bgu.spl.mics.application.messages.die;
 import bgu.spl.mics.application.messages.resourceEvent;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -37,7 +38,7 @@ public class SellingService extends MicroService{
 	private String book;
 	int Curtick=-1;
 	private String name;
-	
+	boolean die=false;
 	
 	public SellingService(Integer nameNum) 
 	{
@@ -62,6 +63,7 @@ public class SellingService extends MicroService{
 		
 		this.SubscribeTimeBroadcast();
 		
+		this.subscribeDieBroadcast();
 		
 		
 	}
@@ -150,7 +152,22 @@ public class SellingService extends MicroService{
 	}
 	
 
-	
+	private void subscribeDieBroadcast()
+	{
+		Callback<die> terminate= new Callback<die>() {
+			
+			@Override
+			public void call(die c) {
+				if(c.getTerminate())
+					die=true;
+					
+				
+			}
+		};
+			
+		subscribeBroadcast(die.class, terminate);
+
+	}
 
 	
 
