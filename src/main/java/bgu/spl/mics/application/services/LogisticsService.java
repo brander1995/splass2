@@ -70,6 +70,11 @@ public class LogisticsService extends MicroService {
 
 			@Override
 			public void call(DeliveryEvent c) {
+//				// https://www.cs.bgu.ac.il/~spl191/phpBB/viewtopic.php?f=4&t=362&p=891&hilit=acquireVehicle&sid=4ddea46d831eaf135c591057e0433ff3#p891
+//				So we need to move the delivery here from the resourceHolder.
+//				We try and create a new delivery, and aquire a vehicle from the resource holder,
+//				resolve the future to get the vehicle, and then do the delivery
+				
 				
 				DeliveryVehicle vehicle=c.getVehicle();
 				vehicle.deliver(c.getAddress(), c.getDistance());

@@ -6,7 +6,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
@@ -17,6 +19,7 @@ import com.google.gson.JsonStreamParser;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.JsonObjects.APIServiceDeserializer;
 import bgu.spl.mics.application.JsonObjects.BookInfoInvnetoryDeserializer;
+import bgu.spl.mics.application.JsonObjects.CustomersSerializer;
 import bgu.spl.mics.application.JsonObjects.InputFileDeserializer;
 import bgu.spl.mics.application.JsonObjects.OrderEventDeserializer;
 import bgu.spl.mics.application.JsonObjects.ResourcesHolderDeserializer;
@@ -25,10 +28,13 @@ import bgu.spl.mics.application.JsonObjects.TimeDeserializer;
 import bgu.spl.mics.application.JsonObjects.VehicleDeserializer;
 import bgu.spl.mics.application.messages.CustomerOrderEvent;
 import bgu.spl.mics.application.passiveObjects.BookInventoryInfo;
+import bgu.spl.mics.application.passiveObjects.Customer;
 import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 import bgu.spl.mics.application.passiveObjects.InputFile;
 import bgu.spl.mics.application.passiveObjects.Inventory;
+import bgu.spl.mics.application.passiveObjects.MoneyRegister;
 import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
+import bgu.spl.mics.application.passiveObjects.OrderReceipt;
 import bgu.spl.mics.application.services.APIService;
 import bgu.spl.mics.application.services.TimeService;
 
@@ -74,6 +80,10 @@ public class BookStoreRunner {
 		gsonBuilder.registerTypeAdapter(TimeService.class, new TimeDeserializer());
 		gsonBuilder.registerTypeAdapter(APIService.class, new APIServiceDeserializer());
 		gsonBuilder.registerTypeAdapter(CustomerOrderEvent.class, new OrderEventDeserializer());
+		
+		
+		// Serializers
+		
 	    final Gson gson = gsonBuilder.create();
 	    InputFile testFile = null;
 		while (p.hasNext()) {
@@ -95,9 +105,34 @@ public class BookStoreRunner {
 	     
 	      System.out.println("HEllO");
 		  /* handle other JSON data structures */
-    	         
+    	 
+	      for (Thread thread : threadList) {
+			try {
+				thread.join();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
     	
     	// Deserizlize the output files.
+	     
+	      // Customer Map
+	      HashMap<Integer, Customer> mCustMap;
+	      
+	      
+	      for (MicroService mServ : testFile.initialServices)
+	      {
+	    	  if (mServ instanceof APIService)
+	    	  {
+	    		  mCustMap.put(((APIService)mServ).getCustomerConnected().getId(), ((APIService)mServ).getCustomerConnected());
+	    	  }
+	      }
+	      
+	     System.out.println(Inventory.getInstance().printInventoryToFile(args[2]));
+	     System.out.println(MoneyRegister.getInstance().printOrderReceipts(args[3])); 
+	     System.out.println(gson.toJson(MoneyRegister.getInstance())); 
+	      
 		}
 		
 

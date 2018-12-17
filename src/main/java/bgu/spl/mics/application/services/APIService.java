@@ -52,8 +52,9 @@ public class APIService extends MicroService{
 		orderSchedule= new ConcurrentLinkedQueue<>();
 	}
 	
-
-
+	public Customer getCustomerConnected() {
+		return customerConnected;
+	}
 	
 	private void setDiscount (int dis, String book)
 	{
