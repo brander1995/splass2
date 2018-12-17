@@ -31,7 +31,6 @@ public class InventoryService extends MicroService{
 	ConcurrentLinkedQueue<Discount> discountList;
 	int orderId;
 	int Curtick=-1;
-	boolean die=true;
 	
 	
 	public InventoryService(Integer nameNum) {
@@ -178,7 +177,7 @@ public class InventoryService extends MicroService{
 			@Override
 			public void call(die c) {
 				if(c.getTerminate())
-					die=true;
+					terminate();
 					
 				
 			}

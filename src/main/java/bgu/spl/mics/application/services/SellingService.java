@@ -38,7 +38,6 @@ public class SellingService extends MicroService{
 	private String book;
 	int Curtick=-1;
 	private String name;
-	boolean die=false;
 	
 	public SellingService(Integer nameNum) 
 	{
@@ -159,7 +158,7 @@ public class SellingService extends MicroService{
 			@Override
 			public void call(die c) {
 				if(c.getTerminate())
-					die=true;
+					terminate();
 					
 				
 			}

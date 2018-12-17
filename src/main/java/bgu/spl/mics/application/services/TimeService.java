@@ -8,6 +8,7 @@ import bgu.spl.mics.MessageBus;
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.TickBroadcast;
+import bgu.spl.mics.application.messages.die;
 
 /**
  * TimeService is the global system timer There is only one instance of this micro-service.
@@ -68,9 +69,13 @@ public class TimeService extends MicroService{
 	@Override
 	protected void initialize() {
 		
+		
+		
 		MessageBusImpl.getInstance().register(this);
 		
-		if (this.amountOfTicks > this.currentTick) 
+		
+		
+		while(this.amountOfTicks > this.currentTick) 
 		{
 			// We should set a timer that counts back ticks on the amount of time delegated by the input.
 			Timer timer = new Timer();
@@ -83,16 +88,17 @@ public class TimeService extends MicroService{
 					tB.setTick(currentTick);
 					sendBroadcast(tB);
 					currentTick++;
-					initialize();
 				}
 			}, this.tickLength);
 		}
-		else
-		{
+		
+		
 			// Die bitch.
-			
+			die ter = new die();
+			ter.terminate();
+			sendBroadcast(ter);
 			this.terminate();
-		}
+			
 	}
 
 }

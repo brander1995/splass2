@@ -26,7 +26,6 @@ public class ResourceService extends MicroService{
 	private ResourcesHolder resource;
 	int Curtick=-1;
 	String name;
-	boolean die=false;
 	
 	
 	public ResourceService(Integer nameNum) {
@@ -103,7 +102,7 @@ public class ResourceService extends MicroService{
 			@Override
 			public void call(die c) {
 				if(c.getTerminate())
-					die=true;
+					terminate();
 					
 				
 			}

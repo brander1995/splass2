@@ -27,7 +27,6 @@ public class LogisticsService extends MicroService {
 
 	int Curtick=-1;
 	String name;
-	boolean die=false;
 	
 	public LogisticsService(Integer nameNum) {
 		super("Logistics Service"+nameNum.toString());
@@ -98,7 +97,7 @@ public class LogisticsService extends MicroService {
 			@Override
 			public void call(die c) {
 				if(c.getTerminate())
-					die=true;
+					terminate();
 					
 				
 			}
@@ -107,6 +106,5 @@ public class LogisticsService extends MicroService {
 		subscribeBroadcast(die.class, terminate);
 
 	}
-
 
 }

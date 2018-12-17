@@ -33,7 +33,6 @@ public class APIService extends MicroService{
 	ConcurrentLinkedQueue<CustomerOrderEvent> orderSchedule1;
 	ConcurrentLinkedQueue<Discount> discountList;
 	int Curtick=-1;
-	boolean die=false;
 	
 	/*
 	 * So this will be the representation of an order for a single user "Online".
@@ -158,7 +157,7 @@ public class APIService extends MicroService{
 			@Override
 			public void call(die c) {
 				if(c.getTerminate())
-					die=true;
+					terminate();
 					
 				
 			}
