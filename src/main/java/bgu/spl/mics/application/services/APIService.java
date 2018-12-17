@@ -74,12 +74,28 @@ public class APIService extends MicroService{
 	
 	@Override
 	protected void initialize() {
+		
 		MessageBusImpl.getInstance().register(this);
 		
-		this.subscribeCustomerOrderEvent();
+		int orderTick=Curtick;
+		
+		//sends the customer order
+		for (CustomerOrderEvent book: orderSchedule1)
+		{
+			BookOrderEvent order= new BookOrderEvent(book.getOrder(), "API Service", customerConnected,orderTick);
+			Future<OrderReceipt> orderbook=sendEvent(order);
+			OrderReceipt receipt= orderbook.get();
+			customerConnected.addReceipt(receipt);
+
+
+		}
+		
+//		this.subscribeCustomerOrderEvent();
 		this.subscribeDiscount();
 		this.SubscribeTimeBroadcast();
 		this.subscribeDieBroadcast();
+		
+		
 		
 		
 	}
@@ -121,33 +137,33 @@ public class APIService extends MicroService{
 	
 	
 	// What do we do with this?
-	private void subscribeCustomerOrderEvent()
-	{
-	//callBack for customerOrderEvent
-		Callback<CustomerOrderEvent> customerOrder= new Callback<CustomerOrderEvent>() {
-
-			@Override
-			public void call(CustomerOrderEvent c) {
-				
-					int orderTick=Curtick;
-					orderSchedule.add(c.getOrder());		
-					
-					//sends the customer order
-					BookOrderEvent order= new BookOrderEvent(c.getOrder(), "API Service", customerConnected,orderTick);
-					Future<OrderReceipt> orderbook=sendEvent(order);
-					OrderReceipt receipt= orderbook.get();
-					
-					//sends the  receipt as a result 
-					complete(c, orderbook.get());
-								
-			}
-			
-			
-		};//end of customerOrder
-		
-		this.subscribeEvent(CustomerOrderEvent.class, customerOrder);
-
-	}
+//	private void subscribeCustomerOrderEvent()
+//	{
+//	//callBack for customerOrderEvent
+//		Callback<CustomerOrderEvent> customerOrder= new Callback<CustomerOrderEvent>() {
+//
+//			@Override
+//			public void call(CustomerOrderEvent c) {
+//				
+//					int orderTick=Curtick;
+//					orderSchedule.add(c.getOrder());		
+//					
+//					//sends the customer order
+//					BookOrderEvent order= new BookOrderEvent(c.getOrder(), "API Service", customerConnected,orderTick);
+//					Future<OrderReceipt> orderbook=sendEvent(order);
+//					OrderReceipt receipt= orderbook.get();
+//					
+//					//sends the  receipt as a result 
+//					complete(c, orderbook.get());
+//								
+//			}
+//			
+//			
+//		};//end of customerOrder
+//		
+//		this.subscribeEvent(CustomerOrderEvent.class, customerOrder);
+//
+//	}
 	
 	
 	private void subscribeDieBroadcast()

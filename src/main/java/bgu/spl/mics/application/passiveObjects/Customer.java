@@ -111,19 +111,25 @@ public class Customer {
 		return this.card.ChargeCred(amount);
 	}
 	
-	// i'm not sure this is the way they want us to take order from customer. 
-	//TODO check this
-	public void orderBooks(ConcurrentLinkedQueue<Entry<String, Integer>> books)
+	
+	public void addReceipt(OrderReceipt r)
 	{
-		for (Entry<String, Integer> book:books)
-		{
-			//Future<OrderReceipt> receipt= MessageBusImpl.getInstance().sendEvent(new CustomerOrderEvent("cusomer id: "+ this.id, this, book.getKey(), book.getValue()));
-			CustomerOrderEvent cevent = new CustomerOrderEvent(book.getKey(), book.getValue());
-			cevent.setSenderName(this.getName());
-			Future<OrderReceipt> receipt= MessageBusImpl.getInstance().sendEvent(cevent);
-			totalReceipt.add(receipt.get());
-		}
+		totalReceipt.add(r);
 	}
+	
+//	// i'm not sure this is the way they want us to take order from customer. 
+//	//TODO check this
+//	public void orderBooks(ConcurrentLinkedQueue<Entry<String, Integer>> books)
+//	{
+//		for (Entry<String, Integer> book:books)
+//		{
+//			//Future<OrderReceipt> receipt= MessageBusImpl.getInstance().sendEvent(new CustomerOrderEvent("cusomer id: "+ this.id, this, book.getKey(), book.getValue()));
+//			CustomerOrderEvent cevent = new CustomerOrderEvent(book.getKey(), book.getValue());
+//			cevent.setSenderName(this.getName());
+//			Future<OrderReceipt> receipt= MessageBusImpl.getInstance().sendEvent(cevent);
+//			totalReceipt.add(receipt.get());
+//		}
+//	}
 	
 	
 	
