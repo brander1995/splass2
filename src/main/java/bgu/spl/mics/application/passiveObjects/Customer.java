@@ -27,22 +27,24 @@ public class Customer {
 	private int distance;
 
 	
-	public Customer(String Name, int Id, String Address, CreditCard cCard)
+	public Customer(String Name, int Id, String Address, CreditCard cCard, int dis)
 	{
 		this.name=Name;
 		this.id=Id;
 		this.address=Address;
 		this.card = cCard;
 		this.totalReceipt= new ConcurrentLinkedQueue<>();
+		this.distance=dis;
 	}
 	
-	public Customer(String Name, int Id, String Address, int CreditNumber, int money)
+	public Customer(String Name, int Id, String Address, int CreditNumber, int money, int dis)
 	{
 		this.name=Name;
 		this.id=Id;
 		this.address=Address;
 		this.card=new CreditCard(CreditNumber, money);
 		this.totalReceipt= new ConcurrentLinkedQueue<>();
+		this.distance=dis;
 	}
 	
 	/**
@@ -70,7 +72,6 @@ public class Customer {
      * Retrieves the distance of the customer from the store.  
      */
 	public int getDistance() {
-		// TODO Implement this
 		return this.distance;
 	}
 
