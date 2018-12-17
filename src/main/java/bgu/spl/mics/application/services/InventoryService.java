@@ -11,6 +11,7 @@ import bgu.spl.mics.application.messages.ChackAvailabilityEvent;
 import bgu.spl.mics.application.messages.DiscountBroadcast;
 import bgu.spl.mics.application.messages.TakeBookEvent;
 import bgu.spl.mics.application.messages.TickBroadcast;
+import bgu.spl.mics.application.messages.die;
 import bgu.spl.mics.application.passiveObjects.Inventory;
 import bgu.spl.mics.application.passiveObjects.OrderReceipt;
 
@@ -30,6 +31,7 @@ public class InventoryService extends MicroService{
 	ConcurrentLinkedQueue<Discount> discountList;
 	int orderId;
 	int Curtick=-1;
+	boolean die=true;
 	
 	
 	public InventoryService(Integer nameNum) {
@@ -71,6 +73,8 @@ public class InventoryService extends MicroService{
 		this.subscribeDiscount();
 		
 		this.SubscribeTimeBroadcast();
+		
+		this.subscribeDieBroadcast();
 
 	}
 	
@@ -164,6 +168,24 @@ public class InventoryService extends MicroService{
 		
 		
 		super.subscribeBroadcast(DiscountBroadcast.class, discount);
+	}
+	
+	
+	private void subscribeDieBroadcast()
+	{
+		Callback<die> terminate= new Callback<die>() {
+			
+			@Override
+			public void call(die c) {
+				if(c.getTerminate())
+					die=true;
+					
+				
+			}
+		};
+			
+		subscribeBroadcast(die.class, terminate);
+
 	}
 	
 	

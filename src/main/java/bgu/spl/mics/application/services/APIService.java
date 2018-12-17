@@ -13,6 +13,7 @@ import bgu.spl.mics.application.messages.BookOrderEvent;
 import bgu.spl.mics.application.messages.CustomerOrderEvent;
 import bgu.spl.mics.application.messages.DiscountBroadcast;
 import bgu.spl.mics.application.messages.TickBroadcast;
+import bgu.spl.mics.application.messages.die;
 import bgu.spl.mics.application.passiveObjects.Customer;
 import bgu.spl.mics.application.passiveObjects.OrderReceipt;
 
@@ -32,6 +33,7 @@ public class APIService extends MicroService{
 	ConcurrentLinkedQueue<CustomerOrderEvent> orderSchedule1;
 	ConcurrentLinkedQueue<Discount> discountList;
 	int Curtick=-1;
+	boolean die=false;
 	
 	/*
 	 * So this will be the representation of an order for a single user "Online".
@@ -78,6 +80,7 @@ public class APIService extends MicroService{
 		this.subscribeCustomerOrderEvent();
 		this.subscribeDiscount();
 		this.SubscribeTimeBroadcast();
+		this.subscribeDieBroadcast();
 		
 		
 	}
@@ -144,6 +147,24 @@ public class APIService extends MicroService{
 		};//end of customerOrder
 		
 		this.subscribeEvent(CustomerOrderEvent.class, customerOrder);
+
+	}
+	
+	
+	private void subscribeDieBroadcast()
+	{
+		Callback<die> terminate= new Callback<die>() {
+			
+			@Override
+			public void call(die c) {
+				if(c.getTerminate())
+					die=true;
+					
+				
+			}
+		};
+			
+		subscribeBroadcast(die.class, terminate);
 
 	}
 }

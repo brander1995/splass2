@@ -19,7 +19,6 @@ import com.google.gson.JsonStreamParser;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.JsonObjects.APIServiceDeserializer;
 import bgu.spl.mics.application.JsonObjects.BookInfoInvnetoryDeserializer;
-import bgu.spl.mics.application.JsonObjects.CustomersSerializer;
 import bgu.spl.mics.application.JsonObjects.InputFileDeserializer;
 import bgu.spl.mics.application.JsonObjects.OrderEventDeserializer;
 import bgu.spl.mics.application.JsonObjects.ResourcesHolderDeserializer;
