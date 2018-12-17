@@ -29,11 +29,13 @@ public class APIServiceDeserializer implements JsonDeserializer<APIService> {
 		final String strName = jsonObject.get("name").getAsString();
 		final long idCust = jsonObject.get("id").getAsLong();
 		final String strAddr = jsonObject.get("address").getAsString();
+		final int distance = jsonObject.get("distance").getAsInt();
 		final CreditCard creditForCust = context.deserialize(jsonObject.get("creditCard"), CreditCard.class);
 		
-		final Customer 	currCust = new Customer(strName, Math.toIntExact(idCust), strAddr, creditForCust);
+		final Customer 	currCust = new Customer(strName, Math.toIntExact(idCust), strAddr, creditForCust, distance);
 		
 		final CustomerOrderEvent[] orderEvents = context.deserialize(jsonObject.get("orderSchedule"), CustomerOrderEvent[].class);
+		
 		
 		final APIService rService = new APIService( currCust,
 													// Wanna know why we can't have nice things? this is why we can't have nice things.

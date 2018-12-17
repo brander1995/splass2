@@ -1,5 +1,14 @@
 package bgu.spl.mics.application.passiveObjects;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 
 /**
@@ -80,6 +89,27 @@ public class MoneyRegister {
      * This method is called by the main method in order to generate the output.. 
      */
 	public void printOrderReceipts(String filename) {
-		//TODO: Implement this
+		LinkedList<OrderReceipt> tempList = new LinkedList<>(this.register);
+		FileOutputStream out = null;
+		
+		try {
+			out = new FileOutputStream(filename);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		GsonBuilder builder = new GsonBuilder();
+        Gson gson =
+            builder.enableComplexMapKeySerialization().setPrettyPrinting().create();
+        
+		try {
+			out.write(gson.toJson(tempList).getBytes());
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }
