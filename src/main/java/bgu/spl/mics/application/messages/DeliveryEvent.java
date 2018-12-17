@@ -1,6 +1,7 @@
 package bgu.spl.mics.application.messages;
 
 import bgu.spl.mics.Event;
+import bgu.spl.mics.application.passiveObjects.Customer;
 import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 
 public class DeliveryEvent implements  Event<Boolean>{
@@ -10,8 +11,7 @@ public class DeliveryEvent implements  Event<Boolean>{
 	private String senderName;
 	private DeliveryVehicle vehicle;
 	
-	
-	public DeliveryEvent(String address, int diss, String sender ,DeliveryVehicle v)
+	public DeliveryEvent(String address, int diss, String sender, DeliveryVehicle v )
 	{
 		this.Address=address;
 		this.distance=diss;
@@ -35,11 +35,12 @@ public class DeliveryEvent implements  Event<Boolean>{
 		return this.senderName;
 	}
 	
+	
 	public DeliveryVehicle getVehicle()
 	{
 		return this.vehicle;
 	}
-	
+
 	
 
 }

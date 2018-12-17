@@ -1,36 +1,42 @@
 package bgu.spl.mics.application.messages;
 
+
+import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 import bgu.spl.mics.Event;
+import bgu.spl.mics.Future;
 
 public class resourceEvent implements Event <Boolean>{
 	
+	String sender;
 	private String Address;
 	private int distance;
-	private String senderName;
 	
 	
-	public resourceEvent(String address, int dis, String sender)
+	public resourceEvent( String Sender, String add, int dis)
 	{
-		this.Address=address;
+		this.sender=Sender;
+		this.Address=add;
 		this.distance=dis;
-		this.senderName=sender;
 	}
 	
+
+	
+	public String getSender()
+	{
+		return this.sender;
+	}
 	
 	public String getAddress()
 	{
 		return this.Address;
 	}
 	
-	public int getDistance() {
+	public int getDistance()
+	{
 		return this.distance;
 	}
 	
 	
-	public String getSender()
-	{
-		return this.senderName;
-	}
 	
 
 	

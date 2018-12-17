@@ -1,8 +1,7 @@
 package bgu.spl.mics.application.services;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-
+import bgu.spl.mics.Future;
 import bgu.spl.mics.Callback;
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
@@ -23,13 +22,15 @@ import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
  */
 public class ResourceService extends MicroService{
 
-	ResourcesHolder resource;
+	private ResourcesHolder resource;
 	int Curtick=-1;
+	String name;
 	
 	
 	public ResourceService(Integer nameNum) {
 		super("Resource Service"+nameNum.toString());
 		this.resource=ResourcesHolder.getInstance();
+		this.name="Resource Service"+nameNum.toString();
 	}
 
 	@Override
@@ -49,41 +50,24 @@ public class ResourceService extends MicroService{
 			@Override
 			public void call(resourceEvent c) {
 				
-				Future<DeliveryVehicle> v= (Future<DeliveryVehicle>) resource.acquireVehicle();
-				DeliveryVehicle vehicle=null;
-				try {
-					//gets a vehicle free for delivery
-					vehicle = v.get();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				
-				if (vehicle!=null)
-				{
+				Future<DeliveryVehicle> vehicleFuture= (Future<DeliveryVehicle>) resource.acquireVehicle();
+				DeliveryVehicle vehicle = vehicleFuture.get();
+
+
 					
 				//sends delivery Event with vehicle
-				DeliveryEvent delivery= new DeliveryEvent(c.getAddress(), c.getDistance(), "Resource Service", vehicle);
+				DeliveryEvent delivery= new DeliveryEvent(c.getAddress(), c.getDistance(), name, vehicle);
 				Future<Boolean> result= (Future<Boolean>) sendEvent(delivery);
-				try {
-					result.get();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
+
+				result.get();
+
 				//releases the vehicle when the delivery ends
 				resource.releaseVehicle(vehicle);
 				
 				}
 				
-			}
+
 		};
 		// TODO finish try and catch
 

@@ -3,6 +3,7 @@ package bgu.spl.mics.application.passiveObjects;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import bgu.spl.mics.Future;
+import bgu.spl.mics.application.JsonObjects.VehicleDeserializer;
 
 /**
  * Passive object representing the resource manager.
@@ -46,9 +47,30 @@ public class ResourcesHolder {
      * 			{@link DeliveryVehicle} when completed.   
      */
 	public Future<DeliveryVehicle> acquireVehicle() {
-		//TODO: Implement this
-		return null;
+		
+		Future<DeliveryVehicle> vehicle= new Future<DeliveryVehicle> ();
+		resolveFuture(vehicle);
+		return vehicle;
+
+		}
+	
+	private synchronized void resolveFuture(Future<DeliveryVehicle> future)
+	{
+		while(AvailableVehiclesList.isEmpty())
+		{
+			try {
+				this.wait();
+			} catch (InterruptedException e) {}
+		}
+			DeliveryVehicle vehicle=AvailableVehiclesList.remove();
+			this.occupiedVehiclesList.add(vehicle);
+			future.resolve(vehicle);
+			
 	}
+		
+
+	
+	
 	
 	/**
      * Releases a specified vehicle, opening it again for the possibility of
@@ -58,8 +80,8 @@ public class ResourcesHolder {
      */
 	
 	
-	//TODO: should i synch this? what happens if acquireVehicle and releaseVehicle are called at the same time?
-	public void releaseVehicle(DeliveryVehicle vehicle) {
+	
+	public synchronized void releaseVehicle(DeliveryVehicle vehicle) {
 		
 		for (DeliveryVehicle v:occupiedVehiclesList)
 		{
@@ -69,6 +91,7 @@ public class ResourcesHolder {
 				AvailableVehiclesList.add(v);
 			}
 		}
+		notifyAll();
 		
 	}
 	

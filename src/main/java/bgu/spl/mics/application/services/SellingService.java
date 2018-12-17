@@ -3,6 +3,7 @@ package bgu.spl.mics.application.services;
 import bgu.spl.mics.application.messages.BookOrderEvent;
 import bgu.spl.mics.application.messages.ChackAvailabilityEvent;
 import bgu.spl.mics.application.messages.CustomerOrderEvent;
+import bgu.spl.mics.application.messages.DeliveryEvent;
 import bgu.spl.mics.application.messages.DiscountBroadcast;
 import bgu.spl.mics.application.messages.TakeBookEvent;
 import bgu.spl.mics.application.messages.TickBroadcast;
@@ -33,23 +34,20 @@ public class SellingService extends MicroService{
 
 	
 	private MoneyRegister register;
-	private int discount;
 	private String book;
 	int Curtick=-1;
+	private String name;
 	
 	
 	public SellingService(Integer nameNum) 
 	{
 		super("Selling Service"+nameNum.toString());
 		this.register=MoneyRegister.getInstance();
-		this.discount=0;
+		this.name="Selling Service"+nameNum.toString();
 	}
 	
 	
-	public void setDiscount(int dis)
-	{
-		this.discount=dis;
-	}
+
 
 	
 	
@@ -61,7 +59,6 @@ public class SellingService extends MicroService{
 		
 		this.subscribeBookOrderEvent();
 		
-		this.subscribeDiscountBroadcast();
 		
 		this.SubscribeTimeBroadcast();
 		
@@ -116,7 +113,7 @@ public class SellingService extends MicroService{
 						{
 							
 						//if TakeBook succeed - deliver the book to the customer		
-						resourceEvent deliver= new resourceEvent(c.getCustomer().getAddress(), c.getCustomer().getDistance(), "Selling Service");
+						resourceEvent deliver= new resourceEvent(name,c.getCustomer().getAddress(),c.getCustomer().getDistance());
 						Future<Boolean> delivery= sendEvent(deliver);
 						boolean delivaryResult=delivery.get();
 						if (delivaryResult==true)
@@ -152,27 +149,7 @@ public class SellingService extends MicroService{
 
 	}
 	
-	
-	
-	
-	private void subscribeDiscountBroadcast()
-	{
-		//discount CallBack as anonymous class
-		Callback<DiscountBroadcast> discount= new Callback<DiscountBroadcast>() {
 
-			@Override
-			public void call(DiscountBroadcast c) {
-				
-				if(c.getBook().equals(book))
-					setDiscount(c.getPercent());
-				
-			}
-			
-		};// end of discount
-		
-		
-		super.subscribeBroadcast(DiscountBroadcast.class, discount);
-	}
 	
 
 	
