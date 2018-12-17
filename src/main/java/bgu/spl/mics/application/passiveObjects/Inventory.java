@@ -1,6 +1,14 @@
 package bgu.spl.mics.application.passiveObjects;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Passive data-object representing the store inventory.
@@ -107,6 +115,35 @@ public class Inventory {
      * This method is called by the main method in order to generate the output.
      */
 	public void printInventoryToFile(String filename){
-		//TODO: Implement this
+		HashMap<String, Integer> tempMap = new HashMap<>();
+		
+		for (BookInventoryInfo cBook : this.inventoryList)
+		{
+			tempMap.put(cBook.getBookTitle(), cBook.getAmountInInventory());
+		}
+		
+		FileOutputStream out = null;
+		
+		try {
+			out = new FileOutputStream(filename);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		GsonBuilder builder = new GsonBuilder();
+        Gson gson =
+            builder.enableComplexMapKeySerialization().setPrettyPrinting().create();
+        
+		try {
+			out.write(gson.toJson(tempMap).getBytes());
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+
+		
 	}
 }

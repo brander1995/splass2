@@ -32,7 +32,7 @@ public class APIServiceDeserializer implements JsonDeserializer<APIService> {
 		final int distance = jsonObject.get("distance").getAsInt();
 		final CreditCard creditForCust = context.deserialize(jsonObject.get("creditCard"), CreditCard.class);
 		
-		final Customer 	currCust = new Customer(strName, Math.toIntExact(idCust), strAddr, creditForCust);
+		final Customer 	currCust = new Customer(strName, Math.toIntExact(idCust), strAddr, creditForCust, distance);
 		
 		final CustomerOrderEvent[] orderEvents = context.deserialize(jsonObject.get("orderSchedule"), CustomerOrderEvent[].class);
 		

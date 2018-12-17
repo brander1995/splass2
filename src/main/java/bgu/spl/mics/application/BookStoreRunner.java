@@ -118,7 +118,7 @@ public class BookStoreRunner {
     	// Deserizlize the output files.
 	     
 	      // Customer Map
-	      HashMap<Integer, Customer> mCustMap;
+	      HashMap<Integer, Customer> mCustMap = null;
 	      
 	      
 	      for (MicroService mServ : testFile.initialServices)
@@ -128,9 +128,9 @@ public class BookStoreRunner {
 	    		  mCustMap.put(((APIService)mServ).getCustomerConnected().getId(), ((APIService)mServ).getCustomerConnected());
 	    	  }
 	      }
-	      
-	     System.out.println(Inventory.getInstance().printInventoryToFile(args[2]));
-	     System.out.println(MoneyRegister.getInstance().printOrderReceipts(args[3])); 
+	     System.out.println(gson.toJson(mCustMap));
+	     Inventory.getInstance().printInventoryToFile(args[2]);
+	     MoneyRegister.getInstance().printOrderReceipts(args[3]); 
 	     System.out.println(gson.toJson(MoneyRegister.getInstance())); 
 	      
 		}
