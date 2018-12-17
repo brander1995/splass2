@@ -17,7 +17,7 @@ public class BookInventoryInfo {
 	private int price;
 	
 	
-	private Object lockAmountInInventory;// in order to synchronized increase and decrease  without locking the entire class
+	private Object lockAmountInInventory = new Object();// in order to synchronized increase and decrease  without locking the entire class
 	
 	
 	

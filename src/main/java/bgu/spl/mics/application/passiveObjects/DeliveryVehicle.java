@@ -15,7 +15,7 @@ public class DeliveryVehicle {
 	
 	private  int license;
 	private int speed;
-	private Object DeliveryKey;
+	private Object DeliveryKey = new Object();
 	
 	
 	/**

@@ -26,7 +26,7 @@ public class MessageBusImpl implements MessageBus {
 	// for complete and sendEvent, so we would know who did what.
 	private ConcurrentLinkedQueue<EventToFuture> eventAndFuture;
 	 
-	private Object key1;
+	private Object key1 = new Object();
 	
 	private  MessageBusImpl() {
 		EventBus= new Hashtable<>();
@@ -95,7 +95,6 @@ public class MessageBusImpl implements MessageBus {
 		
 		}
 	}
-
 	
 	@Override
 	public <T> Future<T> sendEvent(Event<T> e) {
@@ -186,7 +185,7 @@ public class MessageBusImpl implements MessageBus {
 		
 		if (!serMessageQueue.isEmpty())
 		{
-			return serMessageQueue.remove();
+			return serMessageQueue.poll();
 		}
 		
 		return null;

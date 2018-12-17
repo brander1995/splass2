@@ -1,7 +1,7 @@
 package bgu.spl.mics.application.services;
 
 import java.util.TimerTask;
-
+import java.util.concurrent.TimeUnit;
 import java.util.Timer;
 
 import bgu.spl.mics.MessageBus;
@@ -74,11 +74,11 @@ public class TimeService extends MicroService{
 		MessageBusImpl.getInstance().register(this);
 		
 		
+		Timer timer = new Timer();
 		
 		while(this.amountOfTicks > this.currentTick) 
 		{
 			// We should set a timer that counts back ticks on the amount of time delegated by the input.
-			Timer timer = new Timer();
 			timer.schedule(new TimerTask() {
 				
 				@Override
@@ -87,9 +87,18 @@ public class TimeService extends MicroService{
 					TickBroadcast tB = new TickBroadcast();
 					tB.setTick(currentTick);
 					sendBroadcast(tB);
-					currentTick++;
 				}
 			}, this.tickLength);
+
+			currentTick++;
+			System.out.println("The amount of ticks is now: "+ currentTick);
+			
+			try {
+				TimeUnit.MILLISECONDS.sleep(this.tickLength);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		

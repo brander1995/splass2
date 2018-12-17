@@ -174,14 +174,17 @@ public abstract class MicroService implements Runnable {
 				if (msg instanceof Broadcast)
 				{
 					for (CallbackHandler<Object> callbackHandler : broadcastCallbackQueue) {
-						callbackHandler.getCallbackRegardless().call(msg);
+						if ((msg != null) && (callbackHandler.e_type.getName() == msg.getClass().getName()))
+						{
+							callbackHandler.getCallbackRegardless().call(msg);
+						}
 					}
 				}
 				else 
 				{
 					for (CallbackHandler<Object> currEv : this.eventCallbackQueue)
 					{
-						if (currEv.EventToCallback((Event<Object>)msg) != null)
+						if ((msg != null) && (currEv.EventToCallback((Event<Object>)msg) != null))
 						{
 							currEv.getCallbackRegardless().call(msg);
 							break;

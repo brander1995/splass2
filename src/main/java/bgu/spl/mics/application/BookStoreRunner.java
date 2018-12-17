@@ -117,7 +117,7 @@ public class BookStoreRunner {
     	// Deserizlize the output files.
 	     
 	      // Customer Map
-	      HashMap<Integer, Customer> mCustMap = null;
+	      HashMap<Integer, Customer> mCustMap = new HashMap<>();
 	      
 	      
 	      for (MicroService mServ : testFile.initialServices)
