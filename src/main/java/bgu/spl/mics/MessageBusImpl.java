@@ -18,23 +18,19 @@ public class MessageBusImpl implements MessageBus {
 	
 	int ATTEMPTS_AMOUNT = 5;
 	// The microservices for each type of event, using getTypeName or what not.
-	private Hashtable<String, MicroServiceList> EventBus;
-	private Hashtable<String, MicroServiceList> BroadcastBus;
+	private Hashtable<String, MicroServiceList> EventBus = new Hashtable<>();
+	private Hashtable<String, MicroServiceList> BroadcastBus = new Hashtable<>();
 	
 	// The messages for each queue? so the container for them.
-	private Hashtable<Class<?>, ConcurrentLinkedQueue<Message>> MessageQueueContainer;
+	private Hashtable<Class<?>, ConcurrentLinkedQueue<Message>> MessageQueueContainer = new Hashtable<>();
 	
 	// Future to event -> Links a future to the corresponding event, needed 
 	// for complete and sendEvent, so we would know who did what.
-	private ConcurrentLinkedQueue<EventToFuture> eventAndFuture;
+	private ConcurrentLinkedQueue<EventToFuture> eventAndFuture = new ConcurrentLinkedQueue<>();
 	 
 	static final private Object key1 = new Object();
 	
 	private  MessageBusImpl() {
-		EventBus= new Hashtable<>();
-		BroadcastBus= new Hashtable<>();
-		MessageQueueContainer= new Hashtable<>();
-		eventAndFuture= new ConcurrentLinkedQueue<>();
 	
 	}
 	
@@ -95,7 +91,10 @@ public class MessageBusImpl implements MessageBus {
 			}
 			for (MicroService micro: MicroServises.getMicroServices())
 			{
-				MessageQueueContainer.get(micro.getClass()).add(b);
+				if (MessageQueueContainer.contains(micro.getClass()))
+				{
+					MessageQueueContainer.get(micro.getClass()).add(b);
+				}
 			}	
 		
 		}
@@ -130,7 +129,18 @@ public class MessageBusImpl implements MessageBus {
 				}
 			}
 			
+			if (EventBus == null)
+			{
+				System.out.println("Event bus not initialized");
+				return null;
+			}
+			
+			if (EventBus.containsKey(e.getClass().getName()) == false)
+			{
+				System.out.println("EventBus does not contain class " + e.getClass().getName());
+			}
 			ConcurrentLinkedQueue<MicroService> micro = EventBus.get(e.getClass().getName()).getMicroServices();
+			
 			if (micro==null)
 			{
 				System.out.println("no micro service for " + e.toString()) ;
@@ -138,11 +148,25 @@ public class MessageBusImpl implements MessageBus {
 			}
 			
 			
+			MicroService m = null;
 			// Use the first microservice to handle the event, then return it to the bottom of the list
-			MicroService m=micro.remove();
+			if (micro.isEmpty() == false)
+			{
+				m = micro.remove();
+			}
+			if (m == null)
+			{
+				return null;
+			}
+			System.out.println(m.getName() + " now handeling the event " + e.toString());
+		
+			if (MessageQueueContainer.contains(m.getClass()) == false)
+			{
+				return null;
+				//register(m);
+			}
 			
-			System.out.println(m.getName() + " now handeling the event " + e.toString()) ;
-			MessageQueueContainer.get(m.getClass()).add(e);
+			MessageQueueContainer.get(m.getClass()).add(e);	
 			micro.add(m);
 			Future<T> returnValue = new Future<>();
 			EventToFuture ftLinker = new EventToFuture(returnValue, e);
@@ -199,7 +223,21 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public Message awaitMessage(MicroService m) throws InterruptedException {
-		ConcurrentLinkedQueue<Message> serMessageQueue = this.MessageQueueContainer.get(m.getClass());
+		
+		ConcurrentLinkedQueue<Message> serMessageQueue = null;
+		if (this.MessageQueueContainer.containsKey(m.getClass()))
+		{
+			 serMessageQueue = this.MessageQueueContainer.get(m.getClass());
+		}
+		else
+		{
+			return null;
+		}
+		// Sanity
+		if (serMessageQueue == null)
+		{
+			return null;
+		}
 		
 		if (!serMessageQueue.isEmpty())
 		{
