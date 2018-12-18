@@ -94,10 +94,11 @@ public class SellingService extends MicroService{
 
 			@Override
 			public void call(BookOrderEvent c) {
-				
 					int ProccessTick=Curtick;
 					ChackAvailabilityEvent check = new ChackAvailabilityEvent(c.getBook(),"Selling Service");
 					Future<Boolean> availability = sendEvent(check);
+					
+					System.out.println(getName() + " using get on ChakAvalibiltyEvent for  " + c.getBook());
 					boolean result= availability.get();
 					if (result==true)
 					{
@@ -106,6 +107,7 @@ public class SellingService extends MicroService{
 						Future<OrderReceipt> Order= sendEvent(buy);
 						
 						//if "takeBook" didn't succeed- return null as a result
+						System.out.println(getName() + "using get for an orderRecipt" + buy.getBook());
 						if (Order.get()==null)
 						{
 							complete(c,null);
@@ -116,6 +118,8 @@ public class SellingService extends MicroService{
 						//if TakeBook succeed - deliver the book to the customer		
 						resourceEvent deliver= new resourceEvent(name,c.getCustomer().getAddress(),c.getCustomer().getDistance());
 						Future<Boolean> delivery= sendEvent(deliver);
+						
+						System.out.println(getName() + " using get for the deliver " + deliver.getAddress() + deliver.getSender()); 
 						boolean delivaryResult=delivery.get();
 						if (delivaryResult==true)
 						{

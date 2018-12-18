@@ -7,6 +7,12 @@ import bgu.spl.mics.application.passiveObjects.OrderResult;
 
 public class BookOrderEvent implements Event<OrderReceipt> {
 	
+	@Override
+	public String toString() {
+		return "BookOrderEvent [bookName=" + bookName + ", senderName=" + senderName + ", customer=" + customer
+				+ ", OrderTick=" + OrderTick + "]";
+	}
+
 	private String bookName;
 	private String senderName;
 	private Customer customer;

@@ -7,6 +7,11 @@ import bgu.spl.mics.Future;
 
 public class resourceEvent implements Event <Boolean>{
 	
+	@Override
+	public String toString() {
+		return "resourceEvent [sender=" + sender + ", Address=" + Address + ", distance=" + distance + "]";
+	}
+
 	String sender;
 	private String Address;
 	private int distance;

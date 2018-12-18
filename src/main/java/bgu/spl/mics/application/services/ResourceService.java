@@ -52,16 +52,14 @@ public class ResourceService extends MicroService{
 			@Override
 			public void call(resourceEvent c) {
 				
-				
 				Future<DeliveryVehicle> vehicleFuture= (Future<DeliveryVehicle>) resource.acquireVehicle();
+				System.out.println(getName() + " using get on deliveryVehicle ");
 				DeliveryVehicle vehicle = vehicleFuture.get();
-
-
-					
+	
 				//sends delivery Event with vehicle
 				DeliveryEvent delivery= new DeliveryEvent(c.getAddress(), c.getDistance(), name, vehicle);
 				Future<Boolean> result= (Future<Boolean>) sendEvent(delivery);
-
+				System.out.println(getName() + " using get on get deliveryEvent ");
 				result.get();
 
 				//releases the vehicle when the delivery ends

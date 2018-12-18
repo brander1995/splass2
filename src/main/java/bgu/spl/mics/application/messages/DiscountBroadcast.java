@@ -4,6 +4,13 @@ import bgu.spl.mics.Broadcast;
 
 public class DiscountBroadcast implements Broadcast{
 	
+	@Override
+	public String toString() {
+		return "DiscountBroadcast [percentDiscount=" + percentDiscount + ", bookName=" + bookName + ", senderName="
+				+ senderName + "]";
+	}
+
+
 	private int percentDiscount;
 	private String bookName;
 	private String senderName;

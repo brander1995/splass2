@@ -20,6 +20,13 @@ public class DeliveryEvent implements  Event<Boolean>{
 	}
 	
 	
+	@Override
+	public String toString() {
+		return "DeliveryEvent [Address=" + Address + ", distance=" + distance + ", senderName=" + senderName
+				+ ", vehicle=" + vehicle + "]";
+	}
+
+
 	public String getAddress()
 	{
 		return this.Address;

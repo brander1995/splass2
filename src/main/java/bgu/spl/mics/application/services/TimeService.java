@@ -91,8 +91,6 @@ public class TimeService extends MicroService{
 			}, this.tickLength);
 
 			currentTick++;
-			System.out.println("The amount of ticks is now: "+ currentTick);
-			
 			try {
 				TimeUnit.MILLISECONDS.sleep(this.tickLength);
 			} catch (InterruptedException e) {

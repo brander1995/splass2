@@ -77,18 +77,8 @@ public class APIService extends MicroService{
 		
 		MessageBusImpl.getInstance().register(this);
 		
-		int orderTick=Curtick;
 		
-		//sends the customer order
-		for (CustomerOrderEvent book: orderSchedule1)
-		{
-			BookOrderEvent order= new BookOrderEvent(book.getOrder(), "API Service", customerConnected,orderTick);
-			Future<OrderReceipt> orderbook=sendEvent(order);
-			OrderReceipt receipt= orderbook.get();
-			customerConnected.addReceipt(receipt);
-
-
-		}
+		sendTickEvents();
 		
 //		this.subscribeCustomerOrderEvent();
 		this.subscribeDiscount();
@@ -98,6 +88,25 @@ public class APIService extends MicroService{
 		
 		
 		
+	}
+
+
+	/**
+	 * 
+	 */
+	private void sendTickEvents() {
+		//sends the customer order
+		for (CustomerOrderEvent book: orderSchedule1)
+		{
+			if (book.getTick() == Curtick)
+			{
+				BookOrderEvent order= new BookOrderEvent(book.getOrder(), "API Service", customerConnected, book.getTick());
+				Future<OrderReceipt> orderbook=sendEvent(order);
+				System.out.println(this.getName() + " using get on OrderRecipt for " + order.getBook());
+				OrderReceipt receipt= orderbook.get();
+				customerConnected.addReceipt(receipt);
+			}
+		}
 	}
 	
 	
@@ -125,8 +134,9 @@ public class APIService extends MicroService{
 
 			@Override
 			public void call(TickBroadcast c) {
+				System.out.println(c.currentTick());
 				Curtick=c.currentTick();
-				
+				sendTickEvents();
 			}
 			
 			
