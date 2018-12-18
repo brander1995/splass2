@@ -43,6 +43,7 @@ public class ResourceService extends MicroService{
 		this.SubscribeTimeBroadcast();
 		this.subscribeDieBroadcast();
 		
+		TimeService.getInstance().setReadyState(this.getName());
 	}
 	
 	private void subscribeResourceEvent()
@@ -65,9 +66,8 @@ public class ResourceService extends MicroService{
 				//releases the vehicle when the delivery ends
 				resource.releaseVehicle(vehicle);
 				
+				complete(c, true);
 				}
-				
-
 		};
 		// TODO finish try and catch
 
@@ -82,11 +82,8 @@ public class ResourceService extends MicroService{
 
 			@Override
 			public void call(TickBroadcast c) {
-				Curtick=c.currentTick();
-				
+				Curtick=c.currentTick();	
 			}
-			
-			
 		};
 		
 		super.subscribeBroadcast(TickBroadcast.class, tick);
@@ -101,8 +98,6 @@ public class ResourceService extends MicroService{
 			public void call(die c) {
 				if(c.getTerminate())
 					terminate();
-					
-				
 			}
 		};
 			

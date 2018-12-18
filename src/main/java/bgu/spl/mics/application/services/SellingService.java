@@ -64,6 +64,7 @@ public class SellingService extends MicroService{
 		
 		this.subscribeDieBroadcast();
 		
+		TimeService.getInstance().setReadyState(this.getName());
 		
 	}
 	
@@ -96,11 +97,11 @@ public class SellingService extends MicroService{
 			public void call(BookOrderEvent c) {
 					int ProccessTick=Curtick;
 					ChackAvailabilityEvent check = new ChackAvailabilityEvent(c.getBook(),"Selling Service");
-					Future<Boolean> availability = sendEvent(check);
+					Future<Integer> availability = sendEvent(check);
 					
 					System.out.println(getName() + " using get on ChakAvalibiltyEvent for  " + c.getBook());
-					boolean result= availability.get();
-					if (result==true)
+					Integer result= availability.get();
+					if (result > 0 && (c.getCustomer().getAvailableCreditAmount() > result))
 					{
 						//if available - try to take the book from the inventory
 						TakeBookEvent buy= new TakeBookEvent(c.getBook(),"Selling Service",c.getCustomer().getId(),c.getOtderTick(),ProccessTick);
@@ -127,18 +128,27 @@ public class SellingService extends MicroService{
 							int toCharge= Order.get().getPrice();//the price in the receipt is the price after discount
 
 							register.chargeCreditCard(c.getCustomer(), toCharge);
+							
+							// Adding receipt to the register
+							register.file(Order.get());
+							
 							complete(c, Order.get());// sends receipt as a result
 						}
 						//if delivery failed- return null as a result
 						else
+						{
 							complete(c, null);
 						}	
+						}
 						
 					}
-					
+						
 					//if book isn't available -return null as a result
 					else
 					{
+						// TODO Removeme!
+						System.out.println("resualt is now " + result.toString() + " For Cust : " + c.getCustomer().toString());
+						
 						complete(c, null);
 					}
 					

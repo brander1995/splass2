@@ -35,7 +35,7 @@ public class InputFileDeserializer implements JsonDeserializer<InputFile> {
 		filyFile.IntialResources = testyTest[0];
 		
 		MicroService[] testyTest2 = context.deserialize(jsonObject.get("services") , MicroService[].class);
-		filyFile.initialServices =  Arrays.asList(testyTest2);
+		filyFile.initialServices =  testyTest2;
 
 		return filyFile;
 	}

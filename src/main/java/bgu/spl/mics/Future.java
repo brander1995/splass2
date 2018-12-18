@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class Future<T> {
 	
 	private T result;
+	private boolean hasChanged=false;
 	
 	
 	/**
@@ -54,6 +55,7 @@ public class Future<T> {
 	public synchronized void resolve (T result) {
 		
 		this.result=result;
+		this.hasChanged=true;
 		this.notifyAll();
 	}
 	
@@ -61,7 +63,7 @@ public class Future<T> {
 	//Wait & Notify 
 	private synchronized void returnWhenResolveIsFinished()
 	{
-		while (result==null)
+		while (!hasChanged)
 		{
 			try {
 				this.wait();
@@ -78,7 +80,7 @@ public class Future<T> {
 	
 	//TODO rachel: synchronized this?
 	public boolean isDone() {
-		if (result!=null)
+		if (hasChanged)
 			return true;
 		
 		return false;

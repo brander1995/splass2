@@ -44,7 +44,7 @@ public class LogisticsService extends MicroService {
 		
 		this.subscribeDieBroadcast();
 
-		
+		TimeService.getInstance().setReadyState(this.getName());
 	}
 	
 	

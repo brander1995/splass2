@@ -2,7 +2,7 @@ package bgu.spl.mics.application.messages;
 
 import bgu.spl.mics.Event;
 
-public class ChackAvailabilityEvent implements Event<Boolean>{
+public class ChackAvailabilityEvent implements Event<Integer>{
 	
 	private String bookName;
 	private String senderName;

@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,6 +20,7 @@ import com.google.gson.JsonStreamParser;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.JsonObjects.APIServiceDeserializer;
 import bgu.spl.mics.application.JsonObjects.BookInfoInvnetoryDeserializer;
+import bgu.spl.mics.application.JsonObjects.CreditCardDeserializer;
 import bgu.spl.mics.application.JsonObjects.InputFileDeserializer;
 import bgu.spl.mics.application.JsonObjects.OrderEventDeserializer;
 import bgu.spl.mics.application.JsonObjects.ResourcesHolderDeserializer;
@@ -27,6 +29,7 @@ import bgu.spl.mics.application.JsonObjects.TimeDeserializer;
 import bgu.spl.mics.application.JsonObjects.VehicleDeserializer;
 import bgu.spl.mics.application.messages.CustomerOrderEvent;
 import bgu.spl.mics.application.passiveObjects.BookInventoryInfo;
+import bgu.spl.mics.application.passiveObjects.CreditCard;
 import bgu.spl.mics.application.passiveObjects.Customer;
 import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 import bgu.spl.mics.application.passiveObjects.InputFile;
@@ -79,11 +82,12 @@ public class BookStoreRunner {
 		gsonBuilder.registerTypeAdapter(TimeService.class, new TimeDeserializer());
 		gsonBuilder.registerTypeAdapter(APIService.class, new APIServiceDeserializer());
 		gsonBuilder.registerTypeAdapter(CustomerOrderEvent.class, new OrderEventDeserializer());
+		gsonBuilder.registerTypeAdapter(CreditCard.class, new CreditCardDeserializer());
 		
 		
 		// Serializers
 		
-	    final Gson gson = gsonBuilder.create();
+	    final Gson gson = gsonBuilder.setPrettyPrinting().create();
 	    InputFile testFile = null;
 		while (p.hasNext()) {
 	       JsonElement e = p.next();
@@ -95,6 +99,8 @@ public class BookStoreRunner {
 	     {
 	    	 break;
 	     }
+	     
+	     TimeService.getInstance().generateInitArray(testFile.initialServices);
 	     
 	     for (MicroService mService : testFile.initialServices) {
 			Thread currThread = new Thread(mService);

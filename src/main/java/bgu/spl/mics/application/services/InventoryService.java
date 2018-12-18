@@ -74,6 +74,8 @@ public class InventoryService extends MicroService{
 		this.SubscribeTimeBroadcast();
 		
 		this.subscribeDieBroadcast();
+		
+		TimeService.getInstance().setReadyState(this.getName());
 
 	}
 	
@@ -102,18 +104,7 @@ public class InventoryService extends MicroService{
 			@Override
 			public void call(ChackAvailabilityEvent c) {
 				
-				
-				
-				if (inventory.checkAvailabiltyAndGetPrice(c.getName())!=-1)
-				{
-					//if available- result is true 
-					complete(c, true);
-				}
-				else
-				{
-					//if not available- result is false
-					complete(c, false);
-				}
+				complete(c, inventory.checkAvailabiltyAndGetPrice(c.getName()));
 			}
 			
 		};
@@ -140,6 +131,7 @@ public class InventoryService extends MicroService{
 				}
 				OrderReceipt receipt=new OrderReceipt(c.getBook(), price,c.getCustomerId() , Curtick, c.getOrderTick(), c.getProccessTick(), orderId, c.getSender());
 				orderId++;
+				System.out.println("Sending recipt for completed p");
 				complete(c, receipt);
 				
 			}

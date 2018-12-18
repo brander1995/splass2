@@ -16,7 +16,7 @@ public class CreditCard {
 
 	public boolean ChargeCred(int amount)
 	{
-		if (this.money.get()<amount)
+		if (this.money.get() < amount)
 			return false;
 		int val;
 		do

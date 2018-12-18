@@ -1,6 +1,7 @@
 package bgu.spl.mics.application.services;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.management.timer.TimerMBean;
 
@@ -77,15 +78,12 @@ public class APIService extends MicroService{
 		
 		MessageBusImpl.getInstance().register(this);
 		
-		
-		sendTickEvents();
-		
 //		this.subscribeCustomerOrderEvent();
 		this.subscribeDiscount();
 		this.SubscribeTimeBroadcast();
 		this.subscribeDieBroadcast();
 		
-		
+		TimeService.getInstance().setReadyState(this.getName());
 		
 		
 	}
@@ -94,11 +92,11 @@ public class APIService extends MicroService{
 	/**
 	 * 
 	 */
-	private void sendTickEvents() {
+	private void sendTickEvents(AtomicInteger tick) {
 		//sends the customer order
 		for (CustomerOrderEvent book: orderSchedule1)
 		{
-			if (book.getTick() == Curtick)
+			if (book.getTick() == tick.get())
 			{
 				BookOrderEvent order= new BookOrderEvent(book.getOrder(), "API Service", customerConnected, book.getTick());
 				Future<OrderReceipt> orderbook=sendEvent(order);
@@ -136,7 +134,7 @@ public class APIService extends MicroService{
 			public void call(TickBroadcast c) {
 				System.out.println(c.currentTick());
 				Curtick=c.currentTick();
-				sendTickEvents();
+				sendTickEvents(new AtomicInteger(c.currentTick()));
 			}
 			
 			
