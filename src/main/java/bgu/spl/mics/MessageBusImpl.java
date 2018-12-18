@@ -3,8 +3,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
-import bgu.spl.mics.application.messages.ChackAvailabilityEvent;
-
 
 /**
  * The {@link MessageBusImpl class is the implementation of the MessageBus interface.
@@ -63,6 +61,7 @@ public class MessageBusImpl implements MessageBus {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> void complete(Event<T> e, T result) {
 		System.out.println(e.toString() + " has been completed");

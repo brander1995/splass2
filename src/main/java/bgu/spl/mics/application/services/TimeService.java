@@ -69,11 +69,6 @@ public class TimeService extends MicroService{
 		return TimeTickHolder.instance;
 	}
 
-	private int UpdateTicks()
-	{
-		return this.amountOfTicks--;
-	}
-	
 	public boolean generateInitArray(MicroService[] initArr)
 	{
 		for (MicroService microService : initArr) {

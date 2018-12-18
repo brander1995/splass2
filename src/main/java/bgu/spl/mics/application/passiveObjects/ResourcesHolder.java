@@ -3,7 +3,6 @@ package bgu.spl.mics.application.passiveObjects;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import bgu.spl.mics.Future;
-import bgu.spl.mics.application.JsonObjects.VehicleDeserializer;
 
 /**
  * Passive object representing the resource manager.

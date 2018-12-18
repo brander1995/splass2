@@ -2,21 +2,15 @@ package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.application.messages.BookOrderEvent;
 import bgu.spl.mics.application.messages.ChackAvailabilityEvent;
-import bgu.spl.mics.application.messages.CustomerOrderEvent;
-import bgu.spl.mics.application.messages.DeliveryEvent;
-import bgu.spl.mics.application.messages.DiscountBroadcast;
 import bgu.spl.mics.application.messages.TakeBookEvent;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.messages.die;
 import bgu.spl.mics.application.messages.resourceEvent;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import bgu.spl.mics.Callback;
 import bgu.spl.mics.Future;
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
-import bgu.spl.mics.application.passiveObjects.Customer;
 import bgu.spl.mics.application.passiveObjects.MoneyRegister;
 import bgu.spl.mics.application.passiveObjects.OrderReceipt;
 
@@ -35,7 +29,6 @@ public class SellingService extends MicroService{
 
 	
 	private MoneyRegister register;
-	private String book;
 	int Curtick=-1;
 	private String name;
 	

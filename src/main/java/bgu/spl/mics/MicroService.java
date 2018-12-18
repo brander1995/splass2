@@ -62,10 +62,10 @@ public abstract class MicroService implements Runnable {
      *                 {@code type} are taken from this micro-service message
      *                 queue.
      */
-    protected final <T, E extends Event<T>> void subscribeEvent(Class<E> type, Callback<E> callback) {
+	protected final <T, E extends Event<T>> void subscribeEvent(Class<E> type, Callback<E> callback) {
         messageBus.subscribeEvent(type, this);
     	CallbackHandler<E> currCallback = new CallbackHandler<>(callback, type);
-        this.eventCallbackQueue.add((CallbackHandler<Object>) currCallback);
+        this.eventCallbackQueue.add(currCallback.returnCasted());
     }
 
     /**
@@ -88,11 +88,10 @@ public abstract class MicroService implements Runnable {
      *                 {@code type} are taken from this micro-service message
      *                 queue.
      */
-    @SuppressWarnings("unchecked")
-	protected final <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback) {
+    protected final <B extends Broadcast> void subscribeBroadcast(Class<B> type, Callback<B> callback) {
     	 messageBus.subscribeBroadcast(type, this);
      	CallbackHandler<B> currCallback = new CallbackHandler<>(callback, type);
-         this.broadcastCallbackQueue.add((CallbackHandler<Object>) currCallback);
+         this.broadcastCallbackQueue.add(currCallback.returnCasted());
     }
 
     /**

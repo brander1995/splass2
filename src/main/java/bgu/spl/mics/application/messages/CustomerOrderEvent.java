@@ -1,9 +1,6 @@
 package bgu.spl.mics.application.messages;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import bgu.spl.mics.Event;
-import bgu.spl.mics.application.passiveObjects.Customer;
 import bgu.spl.mics.application.passiveObjects.OrderReceipt;
 
 public class CustomerOrderEvent implements Event<OrderReceipt>{

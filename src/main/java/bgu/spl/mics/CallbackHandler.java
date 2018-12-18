@@ -27,4 +27,10 @@ public class CallbackHandler <T>{
 	{
 		return this.callback;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public CallbackHandler<Object> returnCasted()
+	{
+		return ((CallbackHandler<Object>)this);
+	}
 }

@@ -1,16 +1,11 @@
 package bgu.spl.mics.application.services;
 
-import java.util.concurrent.ExecutionException;
-import bgu.spl.mics.Future;
-
 import bgu.spl.mics.Callback;
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
-import bgu.spl.mics.application.JsonObjects.VehicleDeserializer;
 import bgu.spl.mics.application.messages.DeliveryEvent;
 import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.messages.die;
-import bgu.spl.mics.application.messages.resourceEvent;
 import bgu.spl.mics.application.passiveObjects.DeliveryVehicle;
 import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
 

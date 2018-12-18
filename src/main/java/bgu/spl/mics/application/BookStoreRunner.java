@@ -6,12 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -36,7 +32,6 @@ import bgu.spl.mics.application.passiveObjects.InputFile;
 import bgu.spl.mics.application.passiveObjects.Inventory;
 import bgu.spl.mics.application.passiveObjects.MoneyRegister;
 import bgu.spl.mics.application.passiveObjects.ResourcesHolder;
-import bgu.spl.mics.application.passiveObjects.OrderReceipt;
 import bgu.spl.mics.application.services.APIService;
 import bgu.spl.mics.application.services.TimeService;
 

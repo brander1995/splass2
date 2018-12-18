@@ -3,12 +3,7 @@
 package bgu.spl.mics.application.passiveObjects;
 
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import bgu.spl.mics.Future;
-import bgu.spl.mics.MessageBusImpl;
-import bgu.spl.mics.application.messages.CustomerOrderEvent;
 
 /**
  * Passive data-object representing a customer of the store.

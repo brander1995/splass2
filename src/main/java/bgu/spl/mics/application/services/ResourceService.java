@@ -1,6 +1,5 @@
 package bgu.spl.mics.application.services;
 
-import java.util.concurrent.ExecutionException;
 import bgu.spl.mics.Future;
 import bgu.spl.mics.Callback;
 import bgu.spl.mics.MessageBusImpl;

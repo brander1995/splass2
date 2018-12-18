@@ -1,7 +1,6 @@
 package bgu.spl.mics.application.JsonObjects;
 
 import java.lang.reflect.Type;
-import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.google.gson.JsonDeserializationContext;
