@@ -2,6 +2,8 @@
 
 package bgu.spl.mics.application.passiveObjects;
 
+import java.io.Serializable;
+
 /**
  * Passive data-object representing a receipt that should 
  * be sent to a customer after the completion of a BookOrderEvent.
@@ -9,7 +11,7 @@ package bgu.spl.mics.application.passiveObjects;
  * <p>
  * You may add fields and methods to this class as you see fit (including public methods).
  */
-public class OrderReceipt {
+public class OrderReceipt implements Serializable{
 	private int ordedId;
 	private String seller;
 	private int customer;

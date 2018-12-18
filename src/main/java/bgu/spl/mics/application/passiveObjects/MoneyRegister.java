@@ -1,7 +1,8 @@
 package bgu.spl.mics.application.passiveObjects;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -18,7 +19,7 @@ import com.google.gson.GsonBuilder;
  * <p>
  * You can add ONLY private fields and methods to this class as you see fit.
  */
-public class MoneyRegister {
+public class MoneyRegister implements Serializable{
 	private static class MoneyRegisterHolder{
 		private static MoneyRegister instance = new MoneyRegister();
 	}
@@ -88,26 +89,48 @@ public class MoneyRegister {
      */
 	public void printOrderReceipts(String filename) {
 		LinkedList<OrderReceipt> tempList = new LinkedList<>(this.register);
+		
+		
+		
 		FileOutputStream out = null;
-		
-		try {
-			out = new FileOutputStream(filename);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		ObjectOutputStream oos= null;
+	      
+
+	      try {
+	    	out = new FileOutputStream(filename);
+			oos = new ObjectOutputStream(out);
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
-		
-		GsonBuilder builder = new GsonBuilder();
-        Gson gson =
-            builder.enableComplexMapKeySerialization().setPrettyPrinting().create();
-        
-		try {
-			out.write(gson.toJson(tempList).getBytes());
-			out.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			GsonBuilder builder = new GsonBuilder();
+	        Gson gson =
+	            builder.enableComplexMapKeySerialization().setPrettyPrinting().create();
+	      
+	      try {
+			oos.writeObject(tempList);
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
-		
+	      
+	      
+	      finally {
+			if (out!=null)
+			{
+				try {
+					out.close();
+				}
+			catch (IOException e2) {
+				e2.printStackTrace();
+			}
+			}
+			if (oos!=null)
+			{
+				try {
+					oos.close();
+				}catch (IOException e3) {
+					e3.printStackTrace();
+				}
+			}
+		}		
 	}
 }

@@ -20,7 +20,7 @@ public class MessageBusImpl implements MessageBus {
 	private Hashtable<String, MicroServiceList> BroadcastBus = new Hashtable<>();
 	
 	// The messages for each queue? so the container for them.
-	private Hashtable<Class<?>, ConcurrentLinkedQueue<Message>> MessageQueueContainer = new Hashtable<>();
+	private Hashtable<String, ConcurrentLinkedQueue<Message>> MessageQueueContainer = new Hashtable<>();
 	
 	// Future to event -> Links a future to the corresponding event, needed 
 	// for complete and sendEvent, so we would know who did what.
@@ -90,10 +90,11 @@ public class MessageBusImpl implements MessageBus {
 			}
 			for (MicroService micro: MicroServises.getMicroServices())
 			{
-				if (MessageQueueContainer.contains(micro.getClass()))
-				{
-					MessageQueueContainer.get(micro.getClass()).add(b);
-				}
+				if (MessageQueueContainer.containsKey(micro.getName()))
+					{
+						MessageQueueContainer.get(micro.getName()).add(b);
+					}
+				
 			}	
 		
 		}
@@ -157,15 +158,16 @@ public class MessageBusImpl implements MessageBus {
 			{
 				return null;
 			}
+			
 			System.out.println(m.getName() + " now handeling the event " + e.toString());
 		
-			if (MessageQueueContainer.contains(m.getClass()) == false)
+			if (MessageQueueContainer.containsKey(m.getName()) == false)
 			{
 				return null;
 				//register(m);
 			}
 			
-			MessageQueueContainer.get(m.getClass()).add(e);	
+			MessageQueueContainer.get(m.getName()).add(e);	
 			micro.add(m);
 			Future<T> returnValue = new Future<>();
 			EventToFuture ftLinker = new EventToFuture(returnValue, e);
@@ -183,7 +185,7 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public void register(MicroService m) {
 		ConcurrentLinkedQueue<Message> Messages=  new ConcurrentLinkedQueue<>(); 
-		MessageQueueContainer.put(m.getClass(), Messages);
+		MessageQueueContainer.put(m.getName(), Messages);
 
 	}
 
@@ -215,7 +217,7 @@ public class MessageBusImpl implements MessageBus {
 		}
 		
 		
-		MessageQueueContainer.remove(m.getClass());
+		MessageQueueContainer.remove(m.getName());
 		
 	}
 	 
@@ -224,9 +226,9 @@ public class MessageBusImpl implements MessageBus {
 	public Message awaitMessage(MicroService m) throws InterruptedException {
 		
 		ConcurrentLinkedQueue<Message> serMessageQueue = null;
-		if (this.MessageQueueContainer.containsKey(m.getClass()))
+		if (this.MessageQueueContainer.containsKey(m.getName()))
 		{
-			 serMessageQueue = this.MessageQueueContainer.get(m.getClass());
+			 serMessageQueue = this.MessageQueueContainer.get(m.getName());
 		}
 		else
 		{

@@ -2,8 +2,11 @@ package bgu.spl.mics.application;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -42,7 +45,7 @@ import bgu.spl.mics.application.services.TimeService;
 public class BookStoreRunner {
     public static void main(String[] args) {
     	
-    	if (args.length != 5)
+    	if (args.length != 6)
     	{
     		// Fuck this shit.
     		return;
@@ -53,7 +56,7 @@ public class BookStoreRunner {
     	// Lets try.
 		InputStream is = null;
 		try {
-			is = new FileInputStream("./" + args[0]);
+			is = new FileInputStream(args[0]);
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -115,7 +118,7 @@ public class BookStoreRunner {
 			}
 		}
     	
-    	// Deserizlize the output files.
+	      // Deserizlize the output files.
 	     
 	      // Customer Map
 	      HashMap<Integer, Customer> mCustMap = new HashMap<>();
@@ -128,11 +131,92 @@ public class BookStoreRunner {
 	    		  mCustMap.put(((APIService)mServ).getCustomerConnected().getId(), ((APIService)mServ).getCustomerConnected());
 	    	  }
 	      }
-	     System.out.println(gson.toJson(mCustMap));
-	     Inventory.getInstance().printInventoryToFile(args[2]);
-	     MoneyRegister.getInstance().printOrderReceipts(args[3]); 
-	     System.out.println(gson.toJson(MoneyRegister.getInstance())); 
+		
 	      
+	      
+	      FileOutputStream out = null;
+	      ObjectOutputStream oos= null;
+	      
+	      
+	      try {
+	    	out = new FileOutputStream(args[1]);
+			oos = new ObjectOutputStream(out);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	      
+	      
+	      try {
+			oos.writeObject(mCustMap);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	      
+	      
+	      finally {
+			if (out!=null)
+			{
+				try {
+					out.close();
+				}
+			catch (IOException e2) {
+				e2.printStackTrace();
+			}
+			}
+			if (oos!=null)
+			{
+				try {
+					oos.close();
+				}catch (IOException e3) {
+					e3.printStackTrace();
+				}
+			}
+		}
+	      
+    	  System.out.println("Writing to " + args[2]);
+	     Inventory.getInstance().printInventoryToFile(args[2]);
+   	  		System.out.println("Writing to " + args[3]);
+
+	     MoneyRegister.getInstance().printOrderReceipts(args[3]); 
+	 
+	     
+	     
+
+
+	      try {
+	    	out = new FileOutputStream(args[4]);
+			oos = new ObjectOutputStream(out);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	      
+	      
+	      try {
+			oos.writeObject(MoneyRegister.getInstance());
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	      
+	      
+	      finally {
+			if (out!=null)
+			{
+				try {
+					out.close();
+				}
+			catch (IOException e2) {
+				e2.printStackTrace();
+			}
+			}
+			if (oos!=null)
+			{
+				try {
+					oos.close();
+				}catch (IOException e3) {
+					e3.printStackTrace();
+				}
+			}
+	      }
 		}
 		
 

@@ -1,8 +1,9 @@
 package bgu.spl.mics.application.passiveObjects;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -19,8 +20,9 @@ import com.google.gson.GsonBuilder;
  * <p>
  * You can add ONLY private fields and methods to this class as you see fit.
  */
-public class Inventory {
-	private static class SingletonInventoryHolder{
+public class Inventory implements Serializable{
+	
+	private static class SingletonInventoryHolder implements Serializable{
 		private static Inventory instance= new Inventory();
 	}
 	
@@ -121,26 +123,71 @@ public class Inventory {
 			tempMap.put(cBook.getBookTitle(), cBook.getAmountInInventory());
 		}
 		
-		FileOutputStream out = null;
 		
-		try {
-			out = new FileOutputStream(filename);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
+	     FileOutputStream out = null;
+	     ObjectOutputStream oos= null;
+	      
+
+	      try {
+	    	out = new FileOutputStream(filename);
+			oos = new ObjectOutputStream(out);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+			GsonBuilder builder = new GsonBuilder();
+	        Gson gson =
+	            builder.enableComplexMapKeySerialization().setPrettyPrinting().create();
+	      
+	      try {
+			oos.writeObject(tempMap);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	      
+	      
+	      finally {
+			if (out!=null)
+			{
+				try {
+					out.close();
+				}
+			catch (IOException e2) {
+				e2.printStackTrace();
+			}
+			}
+			if (oos!=null)
+			{
+				try {
+					oos.close();
+				}catch (IOException e3) {
+					e3.printStackTrace();
+				}
+			}
 		}
 		
-		GsonBuilder builder = new GsonBuilder();
-        Gson gson =
-            builder.enableComplexMapKeySerialization().setPrettyPrinting().create();
-        
-		try {
-			out.write(gson.toJson(tempMap).getBytes());
-			out.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+//		
+//		FileOutputStream out = null;
+//		
+//		try {
+//			out = new FileOutputStream(filename);
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		GsonBuilder builder = new GsonBuilder();
+//        Gson gson =
+//            builder.enableComplexMapKeySerialization().setPrettyPrinting().create();
+//        
+//		try {
+//			out.write(gson.toJson(tempMap).getBytes());
+//			out.close();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 
 		
