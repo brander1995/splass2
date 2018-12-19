@@ -131,11 +131,5 @@ public class MoneyRegister implements Serializable{
 	}
 	
 	
-	public void printOrderreceipt()
-	{
-		for (OrderReceipt orderReceipt : register) {
-			System.out.println(orderReceipt.toString());
-			
-		}
-	}
+
 }

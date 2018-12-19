@@ -101,14 +101,14 @@ public class Future<T> {
      */
 	
 	
-	public  T get(long timeout, TimeUnit unit) {
+	public synchronized T get(long timeout, TimeUnit unit) {
 		
-		int divisionNumber = TimeService.getInstance().amountOfTicksLeft() * 4;
+		int divisionNumber = TimeService.getInstance().amountOfTicksLeft() * 10;
 		if (this.isDone())
 		{
 			return result;
 		}
-		else
+		/*else
 		{
 			// Does not include clock skew, but its no missile so im fine with this.
 			for (int i = 0;
@@ -124,7 +124,17 @@ public class Future<T> {
 				if (this.isDone())
 					return result;
 			}
+		}*/
+		if (!hasChanged)
+		{
+			try {
+				this.wait(unit.toMillis(timeout));
+			}
+				catch (InterruptedException e) {}
+			
 		}
+		if (isDone())
+			return result;
 		return null;
 	}
 	

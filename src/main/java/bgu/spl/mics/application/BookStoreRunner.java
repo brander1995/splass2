@@ -144,12 +144,7 @@ public class BookStoreRunner {
 	      
 	      try {
 			oos.writeObject(mCustMap);
-			System.out.println("customer result:");
-			for (Customer c : mCustMap.values()) {
-				System.out.println("name:" +c.getName()+ " id:"+ c.getId()+ " money: "+ c.getAvailableCreditAmount());
-				
-			}
-			System.out.println(mCustMap);
+			
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -192,8 +187,6 @@ public class BookStoreRunner {
 	      
 	      try {
 			oos.writeObject(MoneyRegister.getInstance());
-			System.out.println("money register results:");
-			MoneyRegister.getInstance().printOrderreceipt();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}

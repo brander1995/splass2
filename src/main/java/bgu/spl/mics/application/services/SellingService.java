@@ -102,10 +102,10 @@ public class SellingService extends MicroService{
 					
 					DebugInfo.PrintHandle(getName() + " using get on ChakAvalibiltyEvent for  " + c.getBook());
 					Integer result= availability.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS);
-					if ((result != null) && (result > 0) && (c.getCustomer().getAvailableCreditAmount() > result))
+					if ((result != null) && (result > 0) && (c.getCustomer().getAvailableCreditAmount() >= result))
 					{
 						//if available - try to take the book from the inventory
-						TakeBookEvent buy= new TakeBookEvent(c.getBook(),"Selling Service",c.getCustomer().getId(),c.getOtderTick(),ProccessTick);
+						TakeBookEvent buy= new TakeBookEvent(c.getBook(),name,c.getCustomer().getId(),c.getOtderTick(),ProccessTick);
 						Future<OrderReceipt> Order= sendEvent(buy);
 						if (Order==null)
 						{
@@ -116,41 +116,41 @@ public class SellingService extends MicroService{
 						DebugInfo.PrintHandle(getName() + "using get for an orderRecipt" + buy.getBook());
 						if (Order.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS) == null)
 						{
+							DebugInfo.PrintDebug("Take book returned null");
 							complete(c,null);
 						}
 						else 
-						{
+						{							
+							//if TakeBook succeed - deliver the book to the customer		
+							resourceEvent deliver= new resourceEvent(name,c.getCustomer().getAddress(),c.getCustomer().getDistance());
+							Future<Boolean> delivery= sendEvent(deliver);
 							
-						//if TakeBook succeed - deliver the book to the customer		
-						resourceEvent deliver= new resourceEvent(name,c.getCustomer().getAddress(),c.getCustomer().getDistance());
-						Future<Boolean> delivery= sendEvent(deliver);
-						
-						if (delivery == null)
-						{
-							complete(c,null);
-							return;
-						}
-						
-						DebugInfo.PrintHandle(getName() + " using get for the deliver " + deliver.getAddress() + deliver.getSender()); 
-						Boolean delivaryResult=delivery.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS);;
-						
-						if ((delivaryResult != null) && (delivaryResult == true))
-						{
-							//if delivery succeed- charge customer and send receipt
-							int toCharge= Order.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS).getPrice();//the price in the receipt is the price after discount
-
-							register.chargeCreditCard(c.getCustomer(), toCharge);
+							if (delivery == null)
+							{
+								complete(c,null);
+								return;
+							}
 							
-							// Adding receipt to the register
-							register.file(Order.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS));
+							DebugInfo.PrintHandle(getName() + " using get for the deliver " + deliver.getAddress() + deliver.getSender()); 
+							Boolean delivaryResult=delivery.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS);;
 							
-							complete(c, Order.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS));// sends receipt as a result
-						}
-						//if delivery failed- return null as a result
-						else
-						{
-							complete(c, null);
-						}	
+							if ((delivaryResult != null) && (delivaryResult == true))
+							{
+								//if delivery succeed- charge customer and send receipt
+								int toCharge= Order.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS).getPrice();//the price in the receipt is the price after discount
+	
+								register.chargeCreditCard(c.getCustomer(), toCharge);
+								
+								// Adding receipt to the register
+								register.file(Order.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS));
+								
+								complete(c, Order.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS));// sends receipt as a result
+							}
+							//if delivery failed- return null as a result
+							else
+							{
+								complete(c, null);
+							}	
 						}
 						
 					}

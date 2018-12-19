@@ -30,6 +30,7 @@ public class Inventory implements Serializable{
 		this.inventoryList= new ConcurrentLinkedQueue<BookInventoryInfo>();
 	}
 	
+	Object key = new Object();
 	
 	/**
      * Retrieves the single instance of this class.
@@ -69,21 +70,24 @@ public class Inventory implements Serializable{
 	
 	public OrderResult take (String book) {
 		
-		boolean taken=false;
-		for (BookInventoryInfo Book:inventoryList)
-		{
-			if (Book.getBookTitle().equals(book))
+		
+		synchronized (key) {
+			boolean taken=false;
+			for (BookInventoryInfo Book:inventoryList)
 			{
-				//decreaseAmountInInvemtory is thread safe
-				taken=Book.decreaseAmountInInventory();
-
+				if (Book.getBookTitle().equals(book))
+				{
+					//decreaseAmountInInvemtory is thread safe
+					taken=Book.decreaseAmountInInventory();
+	
+				}
+				
 			}
-			
+			if (taken)
+				return OrderResult.SUCCESSFULLY_TAKEN;
+			else
+				return OrderResult.NOT_IN_STOCK;
 		}
-		if (taken)
-			return OrderResult.SUCCESSFULLY_TAKEN;
-		else
-			return OrderResult.NOT_IN_STOCK;
 	}
 	
 	
@@ -98,7 +102,7 @@ public class Inventory implements Serializable{
 		
 		for (BookInventoryInfo Book:inventoryList)
 		{
-			if (Book.getBookTitle().equals(book)&&Book.getAmountInInventory()>0)
+			if (Book.getBookTitle().equals(book))
 				return Book.getPrice();//TODO :  safe? getPrice is not synchronized.
 				
 		}
@@ -135,8 +139,6 @@ public class Inventory implements Serializable{
 		}
 			try {
 			oos.writeObject(tempMap);
-			System.out.println("inventory result:");
-			System.out.println(tempMap);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}

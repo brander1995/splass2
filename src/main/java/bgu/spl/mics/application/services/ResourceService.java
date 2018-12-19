@@ -69,6 +69,7 @@ public class ResourceService extends MicroService{
 				if (result == null)
 				{
 					complete(c, false);
+					return;
 				}
 				
 				result.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS);;
@@ -77,7 +78,7 @@ public class ResourceService extends MicroService{
 				resource.releaseVehicle(vehicle);
 				
 				complete(c, true);
-				}
+			}
 		};
 		// TODO finish try and catch
 

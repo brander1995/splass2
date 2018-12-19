@@ -50,7 +50,7 @@ public class TimeService extends MicroService{
 	
 	public int amountLeftInMS()
 	{
-		return ((this.amountOfTicks - this.currentTick) * this.tickLength);
+		return (amountOfTicksLeft() * this.tickLength);
 	}
 	
 	public int getTickLength() {
@@ -59,7 +59,10 @@ public class TimeService extends MicroService{
 
 	public int amountOfTicksLeft()
 	{
-		return (this.amountOfTicks - this.currentTick);
+		int returnV =(this.amountOfTicks - this.currentTick); 
+		if (returnV > 0)
+			return returnV;
+		return 1;
 	}
 	
 	public void setTickLength(int tickLength) {
