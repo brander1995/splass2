@@ -102,6 +102,8 @@ public class MoneyRegister implements Serializable{
 		}
 			try {
 			oos.writeObject(tempList);
+			System.out.println("order reciept result");
+			System.out.println(tempList);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -126,5 +128,14 @@ public class MoneyRegister implements Serializable{
 				}
 			}
 		}		
+	}
+	
+	
+	public void printOrderreceipt()
+	{
+		for (OrderReceipt orderReceipt : register) {
+			System.out.println(orderReceipt.toString());
+			
+		}
 	}
 }

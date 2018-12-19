@@ -135,6 +135,8 @@ public class Inventory implements Serializable{
 		}
 			try {
 			oos.writeObject(tempMap);
+			System.out.println("inventory result:");
+			System.out.println(tempMap);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
