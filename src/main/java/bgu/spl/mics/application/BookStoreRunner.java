@@ -16,6 +16,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonStreamParser;
 
+import bgu.spl.mics.DebugInfo;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.JsonObjects.APIServiceDeserializer;
 import bgu.spl.mics.application.JsonObjects.BookInfoInvnetoryDeserializer;
@@ -45,11 +46,6 @@ import bgu.spl.mics.application.services.TimeService;
 public class BookStoreRunner {
     public static void main(String[] args) {
     	
-    	if (args.length != 6)
-    	{
-    		// Fuck this shit.
-    		return;
-    	}
     	// Serialize the starting input i guess
   
     	// Do i need to unite them under one object?
@@ -103,6 +99,7 @@ public class BookStoreRunner {
 	     for (MicroService mService : testFile.initialServices) {
 			Thread currThread = new Thread(mService);
 			threadList.add(currThread);
+			DebugInfo.PrintDebug("starting thread " + mService.getName());
 			currThread.start();
 		}  
 	     

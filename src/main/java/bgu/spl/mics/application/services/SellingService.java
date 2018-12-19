@@ -7,6 +7,8 @@ import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.messages.die;
 import bgu.spl.mics.application.messages.resourceEvent;
 
+import java.util.concurrent.TimeUnit;
+
 import bgu.spl.mics.Callback;
 import bgu.spl.mics.DebugInfo;
 import bgu.spl.mics.Future;
@@ -94,8 +96,8 @@ public class SellingService extends MicroService{
 					Future<Integer> availability = sendEvent(check);
 					
 					DebugInfo.PrintHandle(getName() + " using get on ChakAvalibiltyEvent for  " + c.getBook());
-					Integer result= availability.get();
-					if (result > 0 && (c.getCustomer().getAvailableCreditAmount() > result))
+					Integer result= availability.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS);
+					if ((result != null) && (result > 0) && (c.getCustomer().getAvailableCreditAmount() > result))
 					{
 						//if available - try to take the book from the inventory
 						TakeBookEvent buy= new TakeBookEvent(c.getBook(),"Selling Service",c.getCustomer().getId(),c.getOtderTick(),ProccessTick);
@@ -103,7 +105,7 @@ public class SellingService extends MicroService{
 						
 						//if "takeBook" didn't succeed- return null as a result
 						DebugInfo.PrintHandle(getName() + "using get for an orderRecipt" + buy.getBook());
-						if (Order.get()==null)
+						if (Order.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS) == null)
 						{
 							complete(c,null);
 						}
@@ -115,18 +117,19 @@ public class SellingService extends MicroService{
 						Future<Boolean> delivery= sendEvent(deliver);
 						
 						DebugInfo.PrintHandle(getName() + " using get for the deliver " + deliver.getAddress() + deliver.getSender()); 
-						boolean delivaryResult=delivery.get();
+						boolean delivaryResult=delivery.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS);;
+						
 						if (delivaryResult==true)
 						{
 							//if delivery succeed- charge customer and send receipt
-							int toCharge= Order.get().getPrice();//the price in the receipt is the price after discount
+							int toCharge= Order.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS).getPrice();//the price in the receipt is the price after discount
 
 							register.chargeCreditCard(c.getCustomer(), toCharge);
 							
 							// Adding receipt to the register
-							register.file(Order.get());
+							register.file(Order.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS));
 							
-							complete(c, Order.get());// sends receipt as a result
+							complete(c, Order.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS));// sends receipt as a result
 						}
 						//if delivery failed- return null as a result
 						else
@@ -141,9 +144,13 @@ public class SellingService extends MicroService{
 					else
 					{
 						// TODO Removeme!
-						DebugInfo.PrintHandle("resualt is now " + result.toString() + " For Cust : " + c.getCustomer().toString());
+						try {
+						DebugInfo.PrintHandle("result is now " + result.toString() + " For Cust : " + c.getCustomer().toString());
 						DebugInfo.PrintHandle("So the customer could not complete the purchase");
-						
+						}
+						catch (Exception e) {
+							// TODO: handle exception
+						}
 						complete(c, null);
 					}
 					

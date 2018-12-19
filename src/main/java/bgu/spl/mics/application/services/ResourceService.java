@@ -1,6 +1,9 @@
 package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.Future;
+
+import java.util.concurrent.TimeUnit;
+
 import bgu.spl.mics.Callback;
 import bgu.spl.mics.DebugInfo;
 import bgu.spl.mics.MessageBusImpl;
@@ -55,13 +58,13 @@ public class ResourceService extends MicroService{
 				
 				Future<DeliveryVehicle> vehicleFuture= (Future<DeliveryVehicle>) resource.acquireVehicle();
 				DebugInfo.PrintHandle(getName() + " using get on deliveryVehicle ");
-				DeliveryVehicle vehicle = vehicleFuture.get();
+				DeliveryVehicle vehicle = vehicleFuture.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS);;
 	
 				//sends delivery Event with vehicle
 				DeliveryEvent delivery= new DeliveryEvent(c.getAddress(), c.getDistance(), name, vehicle);
 				Future<Boolean> result= (Future<Boolean>) sendEvent(delivery);
 				DebugInfo.PrintHandle(getName() + " using get on get deliveryEvent ");
-				result.get();
+				result.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS);;
 
 				//releases the vehicle when the delivery ends
 				resource.releaseVehicle(vehicle);

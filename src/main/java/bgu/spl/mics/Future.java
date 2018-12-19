@@ -3,6 +3,8 @@ package bgu.spl.mics;
 
 import java.util.concurrent.TimeUnit;
 
+import bgu.spl.mics.application.services.TimeService;
+
 
 /**
  * A Future object represents a promised result - an object that will
@@ -101,18 +103,20 @@ public class Future<T> {
 	
 	public  T get(long timeout, TimeUnit unit) {
 		
-		
+		int divisionNumber = TimeService.getInstance().amountOfTicksLeft() * 4;
 		if (this.isDone())
+		{
 			return result;
-		
+		}
 		else
 		{
+			// Does not include clock skew, but its no missile so im fine with this.
 			for (int i = 0;
-				 (i < 5) && (!this.isDone());
+				 (i < divisionNumber) && (!this.isDone());
 				 i++)
 			{
 				try {
-					unit.sleep(timeout/5);
+					unit.sleep(timeout/(divisionNumber + 5));
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

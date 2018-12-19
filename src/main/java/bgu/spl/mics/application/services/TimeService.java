@@ -48,10 +48,20 @@ public class TimeService extends MicroService{
 		// TODO understand this microservice
 	}
 	
+	public int amountLeftInMS()
+	{
+		return ((this.amountOfTicks - this.currentTick) * this.tickLength);
+	}
+	
 	public int getTickLength() {
 		return tickLength;
 	}
 
+	public int amountOfTicksLeft()
+	{
+		return (this.amountOfTicks - this.currentTick);
+	}
+	
 	public void setTickLength(int tickLength) {
 		this.tickLength = tickLength;
 	}
@@ -143,6 +153,7 @@ public class TimeService extends MicroService{
 		timer.cancel();
 		// Die bitch.
 		die ter = new die();
+		DebugInfo.PrintTick("Killing the process");
 		ter.terminate();
 		sendBroadcast(ter);
 		

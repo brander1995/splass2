@@ -1,6 +1,7 @@
 package bgu.spl.mics.application.services;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import bgu.spl.mics.Callback;
@@ -100,7 +101,8 @@ public class APIService extends MicroService{
 				BookOrderEvent order= new BookOrderEvent(book.getOrder(), "API Service", customerConnected, book.getTick());
 				Future<OrderReceipt> orderbook=sendEvent(order);
 				DebugInfo.PrintHandle(this.getName() + " using get on OrderRecipt for " + order.getBook());
-				OrderReceipt receipt= orderbook.get();
+				
+				OrderReceipt receipt = orderbook.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS);
 				customerConnected.addReceipt(receipt);
 			}
 		}
@@ -141,37 +143,6 @@ public class APIService extends MicroService{
 		
 		super.subscribeBroadcast(TickBroadcast.class, tick);
 	}
-	
-	
-	// What do we do with this?
-//	private void subscribeCustomerOrderEvent()
-//	{
-//	//callBack for customerOrderEvent
-//		Callback<CustomerOrderEvent> customerOrder= new Callback<CustomerOrderEvent>() {
-//
-//			@Override
-//			public void call(CustomerOrderEvent c) {
-//				
-//					int orderTick=Curtick;
-//					orderSchedule.add(c.getOrder());		
-//					
-//					//sends the customer order
-//					BookOrderEvent order= new BookOrderEvent(c.getOrder(), "API Service", customerConnected,orderTick);
-//					Future<OrderReceipt> orderbook=sendEvent(order);
-//					OrderReceipt receipt= orderbook.get();
-//					
-//					//sends the  receipt as a result 
-//					complete(c, orderbook.get());
-//								
-//			}
-//			
-//			
-//		};//end of customerOrder
-//		
-//		this.subscribeEvent(CustomerOrderEvent.class, customerOrder);
-//
-//	}
-	
 	
 	private void subscribeDieBroadcast()
 	{

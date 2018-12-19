@@ -23,6 +23,12 @@ public class DebugInfo {
 		if (VERBOSE && DEBUG_TICKS)
 			System.out.println(strDebug.toString());
 	}
-	
+	public static void PrintDebug(Object strDebug)
+	{
+		if (VERBOSE)
+		{
+			System.out.println(strDebug.toString());
+		}
+	}
 	
 }
