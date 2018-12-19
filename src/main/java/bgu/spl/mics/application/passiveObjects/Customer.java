@@ -3,7 +3,6 @@
 package bgu.spl.mics.application.passiveObjects;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -14,6 +13,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * <p>
  * You may add fields and methods to this class as you see fit (including public methods).
  */
+@SuppressWarnings("serial")
 public class Customer implements Serializable{
 	
 	private String name;

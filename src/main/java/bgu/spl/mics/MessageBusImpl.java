@@ -64,14 +64,14 @@ public class MessageBusImpl implements MessageBus {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> void complete(Event<T> e, T result) {
-		System.out.println(e.toString() + " has been completed");
+		DebugInfo.PrintHandle(e.toString() + " has been completed");
 		for (EventToFuture event: eventAndFuture)
 		{
 			Future<T> releventFuture =(Future<T>) event.getReleventFuture(e);
 			if (releventFuture != null)
 			{
 				
-				System.out.println(e.toString() + " futures has been resolved");
+				DebugInfo.PrintHandle(e.toString() + " futures has been resolved");
 				
 				releventFuture.resolve(result);
 			}
@@ -118,7 +118,7 @@ public class MessageBusImpl implements MessageBus {
 			int readAttempts = 0;	
 			// Get the relevent microservice queue
 			
-			System.out.println("Got to MessageBus::SendEvent" );
+			DebugInfo.PrintHandle("Got to MessageBus::SendEvent" );
 			while ((EventBus.containsKey(e.getClass().getName()) == false) && (readAttempts <= ATTEMPTS_AMOUNT))
 			{
 				try {
@@ -159,7 +159,7 @@ public class MessageBusImpl implements MessageBus {
 				return null;
 			}
 			
-			System.out.println(m.getName() + " now handeling the event " + e.toString());
+			DebugInfo.PrintHandle(m.getName() + " now handeling the event " + e.toString());
 		
 			if (MessageQueueContainer.containsKey(m.getName()) == false)
 			{

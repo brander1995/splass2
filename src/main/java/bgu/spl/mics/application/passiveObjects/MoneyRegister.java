@@ -6,9 +6,6 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 
 /**
  * Passive object representing the store finance management. 
@@ -19,6 +16,7 @@ import com.google.gson.GsonBuilder;
  * <p>
  * You can add ONLY private fields and methods to this class as you see fit.
  */
+@SuppressWarnings("serial")
 public class MoneyRegister implements Serializable{
 	private static class MoneyRegisterHolder{
 		private static MoneyRegister instance = new MoneyRegister();
@@ -102,11 +100,7 @@ public class MoneyRegister implements Serializable{
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-			GsonBuilder builder = new GsonBuilder();
-	        Gson gson =
-	            builder.enableComplexMapKeySerialization().setPrettyPrinting().create();
-	      
-	      try {
+			try {
 			oos.writeObject(tempList);
 		} catch (IOException e1) {
 			e1.printStackTrace();

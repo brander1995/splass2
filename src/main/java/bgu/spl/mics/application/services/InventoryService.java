@@ -3,6 +3,7 @@ package bgu.spl.mics.application.services;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import bgu.spl.mics.Callback;
+import bgu.spl.mics.DebugInfo;
 import bgu.spl.mics.Discount;
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
@@ -130,7 +131,7 @@ public class InventoryService extends MicroService{
 				}
 				OrderReceipt receipt=new OrderReceipt(c.getBook(), price,c.getCustomerId() , Curtick, c.getOrderTick(), c.getProccessTick(), orderId, c.getSender());
 				orderId++;
-				System.out.println("Sending recipt for completed p");
+				DebugInfo.PrintHandle("Sending recipt for completed p");
 				complete(c, receipt);
 				
 			}

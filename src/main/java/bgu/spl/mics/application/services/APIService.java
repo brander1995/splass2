@@ -4,6 +4,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import bgu.spl.mics.Callback;
+import bgu.spl.mics.DebugInfo;
 import bgu.spl.mics.Discount;
 import bgu.spl.mics.Future;
 import bgu.spl.mics.MessageBusImpl;
@@ -98,7 +99,7 @@ public class APIService extends MicroService{
 			{
 				BookOrderEvent order= new BookOrderEvent(book.getOrder(), "API Service", customerConnected, book.getTick());
 				Future<OrderReceipt> orderbook=sendEvent(order);
-				System.out.println(this.getName() + " using get on OrderRecipt for " + order.getBook());
+				DebugInfo.PrintHandle(this.getName() + " using get on OrderRecipt for " + order.getBook());
 				OrderReceipt receipt= orderbook.get();
 				customerConnected.addReceipt(receipt);
 			}
@@ -130,7 +131,7 @@ public class APIService extends MicroService{
 
 			@Override
 			public void call(TickBroadcast c) {
-				System.out.println(c.currentTick());
+				DebugInfo.PrintTick(c.currentTick());
 				Curtick=c.currentTick();
 				sendTickEvents(new AtomicInteger(c.currentTick()));
 			}

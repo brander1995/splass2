@@ -2,6 +2,7 @@ package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.Future;
 import bgu.spl.mics.Callback;
+import bgu.spl.mics.DebugInfo;
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.DeliveryEvent;
@@ -53,13 +54,13 @@ public class ResourceService extends MicroService{
 			public void call(resourceEvent c) {
 				
 				Future<DeliveryVehicle> vehicleFuture= (Future<DeliveryVehicle>) resource.acquireVehicle();
-				System.out.println(getName() + " using get on deliveryVehicle ");
+				DebugInfo.PrintHandle(getName() + " using get on deliveryVehicle ");
 				DeliveryVehicle vehicle = vehicleFuture.get();
 	
 				//sends delivery Event with vehicle
 				DeliveryEvent delivery= new DeliveryEvent(c.getAddress(), c.getDistance(), name, vehicle);
 				Future<Boolean> result= (Future<Boolean>) sendEvent(delivery);
-				System.out.println(getName() + " using get on get deliveryEvent ");
+				DebugInfo.PrintHandle(getName() + " using get on get deliveryEvent ");
 				result.get();
 
 				//releases the vehicle when the delivery ends

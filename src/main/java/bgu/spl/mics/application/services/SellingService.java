@@ -8,6 +8,7 @@ import bgu.spl.mics.application.messages.die;
 import bgu.spl.mics.application.messages.resourceEvent;
 
 import bgu.spl.mics.Callback;
+import bgu.spl.mics.DebugInfo;
 import bgu.spl.mics.Future;
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
@@ -92,7 +93,7 @@ public class SellingService extends MicroService{
 					ChackAvailabilityEvent check = new ChackAvailabilityEvent(c.getBook(),"Selling Service");
 					Future<Integer> availability = sendEvent(check);
 					
-					System.out.println(getName() + " using get on ChakAvalibiltyEvent for  " + c.getBook());
+					DebugInfo.PrintHandle(getName() + " using get on ChakAvalibiltyEvent for  " + c.getBook());
 					Integer result= availability.get();
 					if (result > 0 && (c.getCustomer().getAvailableCreditAmount() > result))
 					{
@@ -101,7 +102,7 @@ public class SellingService extends MicroService{
 						Future<OrderReceipt> Order= sendEvent(buy);
 						
 						//if "takeBook" didn't succeed- return null as a result
-						System.out.println(getName() + "using get for an orderRecipt" + buy.getBook());
+						DebugInfo.PrintHandle(getName() + "using get for an orderRecipt" + buy.getBook());
 						if (Order.get()==null)
 						{
 							complete(c,null);
@@ -113,7 +114,7 @@ public class SellingService extends MicroService{
 						resourceEvent deliver= new resourceEvent(name,c.getCustomer().getAddress(),c.getCustomer().getDistance());
 						Future<Boolean> delivery= sendEvent(deliver);
 						
-						System.out.println(getName() + " using get for the deliver " + deliver.getAddress() + deliver.getSender()); 
+						DebugInfo.PrintHandle(getName() + " using get for the deliver " + deliver.getAddress() + deliver.getSender()); 
 						boolean delivaryResult=delivery.get();
 						if (delivaryResult==true)
 						{
@@ -140,7 +141,8 @@ public class SellingService extends MicroService{
 					else
 					{
 						// TODO Removeme!
-						System.out.println("resualt is now " + result.toString() + " For Cust : " + c.getCustomer().toString());
+						DebugInfo.PrintHandle("resualt is now " + result.toString() + " For Cust : " + c.getCustomer().toString());
+						DebugInfo.PrintHandle("So the customer could not complete the purchase");
 						
 						complete(c, null);
 					}

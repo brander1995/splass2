@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class Future<T> {
 	
 	private T result;
-	private boolean hasChanged=false;
+	private boolean hasChanged = false;
 	
 	
 	/**
@@ -26,7 +26,7 @@ public class Future<T> {
 	public Future() {
 		
 		this.result=null;
-		
+		this.hasChanged = false;
 	}
 	
 	/**

@@ -12,6 +12,7 @@ import java.io.Serializable;
  * <p>
  * You may add fields and methods to this class as you see fit (including public methods).
  */
+@SuppressWarnings("serial")
 public class BookInventoryInfo implements Serializable{
 
 	private String booktitle;

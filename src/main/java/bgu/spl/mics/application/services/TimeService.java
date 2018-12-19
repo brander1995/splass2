@@ -5,6 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import bgu.spl.mics.DebugInfo;
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
 import bgu.spl.mics.application.messages.TickBroadcast;
@@ -123,7 +124,7 @@ public class TimeService extends MicroService{
 					// TODO Auto-generated method stub
 					TickBroadcast tB = new TickBroadcast();
 					tB.setTick(currentTick);
-					System.out.println("current tick is :"+ currentTick);
+					DebugInfo.PrintTick("current tick is :"+ currentTick);
 					currentTick++;
 					sendBroadcast(tB);
 				}
@@ -144,6 +145,16 @@ public class TimeService extends MicroService{
 		die ter = new die();
 		ter.terminate();
 		sendBroadcast(ter);
+		
+		// Wait for a random time
+		try {
+			TimeUnit.MILLISECONDS.sleep(20);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sendBroadcast(ter);
+		
 		this.terminate();
 			
 	}

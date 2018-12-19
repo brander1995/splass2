@@ -7,9 +7,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 /**
  * Passive data-object representing the store inventory.
  * It holds a collection of {@link BookInventoryInfo} for all the
@@ -20,6 +17,7 @@ import com.google.gson.GsonBuilder;
  * <p>
  * You can add ONLY private fields and methods to this class as you see fit.
  */
+@SuppressWarnings("serial")
 public class Inventory implements Serializable{
 	
 	private static class SingletonInventoryHolder implements Serializable{
@@ -135,11 +133,7 @@ public class Inventory implements Serializable{
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-			GsonBuilder builder = new GsonBuilder();
-	        Gson gson =
-	            builder.enableComplexMapKeySerialization().setPrettyPrinting().create();
-	      
-	      try {
+			try {
 			oos.writeObject(tempMap);
 		} catch (IOException e1) {
 			e1.printStackTrace();

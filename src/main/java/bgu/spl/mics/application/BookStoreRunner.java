@@ -106,7 +106,6 @@ public class BookStoreRunner {
 			currThread.start();
 		}  
 	     
-	      System.out.println("HEllO");
 		  /* handle other JSON data structures */
     	 
 	      for (Thread thread : threadList) {
@@ -173,11 +172,8 @@ public class BookStoreRunner {
 			}
 		}
 	      
-    	  System.out.println("Writing to " + args[2]);
-	     Inventory.getInstance().printInventoryToFile(args[2]);
-   	  		System.out.println("Writing to " + args[3]);
-
-	     MoneyRegister.getInstance().printOrderReceipts(args[3]); 
+	    Inventory.getInstance().printInventoryToFile(args[2]);
+   	  	MoneyRegister.getInstance().printOrderReceipts(args[3]); 
 	 
 	     
 	     

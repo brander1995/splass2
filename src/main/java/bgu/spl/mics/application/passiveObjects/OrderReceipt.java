@@ -11,6 +11,7 @@ import java.io.Serializable;
  * <p>
  * You may add fields and methods to this class as you see fit (including public methods).
  */
+@SuppressWarnings("serial")
 public class OrderReceipt implements Serializable{
 	private int ordedId;
 	private String seller;

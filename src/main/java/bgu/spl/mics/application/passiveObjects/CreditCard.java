@@ -3,6 +3,7 @@ package bgu.spl.mics.application.passiveObjects;
 import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@SuppressWarnings("serial")
 public class CreditCard implements Serializable{
 	
 	private int number;

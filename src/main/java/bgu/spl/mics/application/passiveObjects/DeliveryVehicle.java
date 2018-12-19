@@ -15,7 +15,7 @@ public class DeliveryVehicle {
 	
 	private  int license;
 	private int speed;
-	private Object DeliveryKey = new Object();
+	private Object DeliveryKey;
 	
 	
 	/**
@@ -25,7 +25,7 @@ public class DeliveryVehicle {
 		 
 		this.license=license;
 		this.speed=speed;
-		
+		this.DeliveryKey = new Object();
 	  }
 	 
 	/**
@@ -58,6 +58,10 @@ public class DeliveryVehicle {
 	public void deliver(String address, int distance) {
 		
 	
+		if (DeliveryKey == null)
+		{
+			
+		}
 		
 		synchronized (DeliveryKey)
 		{
