@@ -81,6 +81,7 @@ public class MessageBusImpl implements MessageBus {
 
 	@Override
 	public void sendBroadcast(Broadcast b) {
+		DebugInfo.PrintDebug("broadcast: "+ b.toString());
 		// See explanation below
 		synchronized (key1) {
 			MicroServiceList MicroServises= BroadcastBus.get(b.getClass().getName());
