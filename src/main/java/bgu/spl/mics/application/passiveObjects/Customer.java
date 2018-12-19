@@ -91,8 +91,8 @@ public class Customer implements Serializable{
      * <p>
      * @return Amount of money left.   
      */
-	public Integer getAvailableCreditAmount() {
-		return new Integer(this.card.getMoney());
+	public int getAvailableCreditAmount() {
+		return this.card.getMoney();
 	}
 	
 	/**

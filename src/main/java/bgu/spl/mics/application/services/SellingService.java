@@ -102,7 +102,8 @@ public class SellingService extends MicroService{
 					
 					DebugInfo.PrintHandle(getName() + " using get on ChakAvalibiltyEvent for  " + c.getBook());
 					Integer result= availability.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS);
-					if ((result != null) && (result > 0) && (c.getCustomer().getAvailableCreditAmount() >= result))
+					Integer tempInt = new Integer(c.getCustomer().getAvailableCreditAmount());
+					if ((result != null) && (result > 0) && ( tempInt >= result))
 					{
 						//if available - try to take the book from the inventory
 						TakeBookEvent buy= new TakeBookEvent(c.getBook(),name,c.getCustomer().getId(),c.getOtderTick(),ProccessTick);
