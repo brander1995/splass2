@@ -16,7 +16,10 @@ import bgu.spl.mics.application.passiveObjects.Customer;
 import bgu.spl.mics.application.services.APIService;
 
 public class APIServiceDeserializer implements JsonDeserializer<APIService> {
-	private static int counter=0;
+	
+	// Public for debug reasons
+	public static int counter=0;
+	
 	@Override
 	public APIService deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 			throws JsonParseException {

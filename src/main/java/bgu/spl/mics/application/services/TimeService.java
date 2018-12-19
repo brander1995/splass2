@@ -72,6 +72,7 @@ public class TimeService extends MicroService{
 
 	public void setAmountOfTicks(int amountOfTicks) {
 		this.amountOfTicks = amountOfTicks;
+		this.currentTick = 0;
 	}
 	
 	//singleton
@@ -82,6 +83,7 @@ public class TimeService extends MicroService{
 
 	public boolean generateInitArray(MicroService[] initArr)
 	{
+		this.initArr = new HashMap<>();
 		for (MicroService microService : initArr) {
 			if (this.getName() != microService.getName())
 				{

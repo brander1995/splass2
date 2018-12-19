@@ -101,9 +101,12 @@ public class APIService extends MicroService{
 				BookOrderEvent order= new BookOrderEvent(book.getOrder(), "API Service", customerConnected, book.getTick());
 				Future<OrderReceipt> orderbook=sendEvent(order);
 				DebugInfo.PrintHandle(this.getName() + " using get on OrderRecipt for " + order.getBook());
+				if (orderbook != null)
+				{
+					OrderReceipt receipt = orderbook.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS);
+					customerConnected.addReceipt(receipt);
+				}
 				
-				OrderReceipt receipt = orderbook.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS);
-				customerConnected.addReceipt(receipt);
 			}
 		}
 	}

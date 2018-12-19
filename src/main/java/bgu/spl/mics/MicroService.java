@@ -199,5 +199,7 @@ public abstract class MicroService implements Runnable {
 				e.printStackTrace();
 			}       
         }
+        
+        MessageBusImpl.getInstance().unregister(this);
     }
 }

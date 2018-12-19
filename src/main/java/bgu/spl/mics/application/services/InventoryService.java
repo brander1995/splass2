@@ -14,6 +14,7 @@ import bgu.spl.mics.application.messages.TickBroadcast;
 import bgu.spl.mics.application.messages.die;
 import bgu.spl.mics.application.passiveObjects.Inventory;
 import bgu.spl.mics.application.passiveObjects.OrderReceipt;
+import bgu.spl.mics.application.passiveObjects.OrderResult;
 
 /**
  * InventoryService is in charge of the book inventory and stock.
@@ -122,18 +123,23 @@ public class InventoryService extends MicroService{
 			@Override
 			public void call(TakeBookEvent c) {
 				
-				inventory.take(c.getBook());
-				int price=inventory.checkAvailabiltyAndGetPrice(c.getBook());
-				for (Discount dis: discountList)
+				if (inventory.take(c.getBook())==OrderResult.NOT_IN_STOCK)
 				{
-					if (dis.getBook().equals(c.getBook()))
-						price=price*(dis.getDiscount()/100);
+					complete(c, null);
 				}
-				OrderReceipt receipt=new OrderReceipt(c.getBook(), price,c.getCustomerId() , Curtick, c.getOrderTick(), c.getProccessTick(), orderId, c.getSender());
-				orderId++;
-				DebugInfo.PrintHandle("Sending recipt for completed p");
-				complete(c, receipt);
-				
+				else
+				{
+					int price=inventory.checkAvailabiltyAndGetPrice(c.getBook());
+					for (Discount dis: discountList)
+					{
+						if (dis.getBook().equals(c.getBook()))
+							price=price*(dis.getDiscount()/100);
+					}
+					OrderReceipt receipt=new OrderReceipt(c.getBook(), price,c.getCustomerId() , Curtick, c.getOrderTick(), c.getProccessTick(), orderId, c.getSender());
+					orderId++;
+					DebugInfo.PrintHandle("Sending recipt for completed p");
+					complete(c, receipt);
+				}
 			}
 		};
 		

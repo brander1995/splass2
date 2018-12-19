@@ -64,6 +64,13 @@ public class ResourceService extends MicroService{
 				DeliveryEvent delivery= new DeliveryEvent(c.getAddress(), c.getDistance(), name, vehicle);
 				Future<Boolean> result= (Future<Boolean>) sendEvent(delivery);
 				DebugInfo.PrintHandle(getName() + " using get on get deliveryEvent ");
+				
+				// sanity
+				if (result == null)
+				{
+					complete(c, false);
+				}
+				
 				result.get(TimeService.getInstance().amountLeftInMS(), TimeUnit.MILLISECONDS);;
 
 				//releases the vehicle when the delivery ends
